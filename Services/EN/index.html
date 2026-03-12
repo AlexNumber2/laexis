@@ -3,192 +3,355 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Laexis Advisory | Cross-border Business Advisor</title>
-
 <style>
-
-body{
-margin:0;
-font-family: "Helvetica Neue", Arial, sans-serif;
-color:#333;
-background:#f7f9fb;
-line-height:1.6;
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-strong: #ffffff;
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --brand-soft: #e7efe8;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 26px;
 }
 
-.header{
-background:#0f2747;
-color:white;
-padding:80px 20px;
-text-align:center;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.header h1{
-font-size:40px;
-margin-bottom:10px;
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+  line-height: 1.8;
 }
 
-.header p{
-font-size:18px;
-opacity:0.9;
+a {
+  color: inherit;
 }
 
-.container{
-max-width:950px;
-margin:auto;
-padding:60px 20px;
-background:white;
+.page-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 28px 0 56px;
 }
 
-h2{
-color:#0f2747;
-margin-top:40px;
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.section{
-margin-top:30px;
+.brand {
+  color: var(--brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
 }
 
-.highlight{
-background:#eef3f8;
-padding:20px;
-border-left:4px solid #0f2747;
-margin-top:20px;
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
 }
 
-ul{
-margin-top:10px;
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--brand);
 }
 
-.footer{
-margin-top:60px;
-padding:40px;
-text-align:center;
-background:#0f2747;
-color:white;
-font-size:14px;
+.hero {
+  padding: clamp(2rem, 5vw, 4rem);
+  background: linear-gradient(145deg, rgba(18, 49, 79, 0.96), rgba(35, 77, 116, 0.94));
+  border-radius: 30px;
+  color: #fff;
+  box-shadow: var(--shadow);
 }
 
-.contact{
-margin-top:20px;
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-a{
-color:#0f2747;
-text-decoration:none;
-font-weight:bold;
+.hero h1 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  line-height: 1.05;
 }
 
+.hero .lead {
+  margin: 0;
+  max-width: 44rem;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.main-card,
+.side-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.main-card {
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+}
+
+.side-card {
+  padding: 1.5rem;
+}
+
+section + section {
+  margin-top: 2rem;
+}
+
+h2 {
+  margin: 0 0 0.8rem;
+  color: var(--brand);
+  font-size: clamp(1.3rem, 2.3vw, 1.7rem);
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+li + li {
+  margin-top: 0.6rem;
+}
+
+.highlight {
+  margin-top: 1.1rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--brand-soft);
+  border-left: 4px solid var(--brand);
+  border-radius: 0 16px 16px 0;
+}
+
+.highlight strong {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--brand);
+}
+
+.meta-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.meta-item {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.meta-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.meta-item h3 {
+  margin: 0 0 0.35rem;
+  color: var(--brand);
+  font-size: 1rem;
+}
+
+.meta-item p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.contact-box {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.contact-link {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footer-note {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.4rem;
+  background: rgba(18, 49, 79, 0.06);
+  border-radius: 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 960px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(1120px, calc(100% - 1.25rem));
+    padding: 18px 0 32px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .hero {
+    border-radius: 22px;
+    padding: 1.4rem;
+  }
+
+  .main-card,
+  .side-card {
+    border-radius: 20px;
+  }
+
+  .main-card,
+  .side-card {
+    padding: 1.2rem;
+  }
+}
 </style>
 </head>
-
 <body>
-
-<div class="header">
-
-<h1>Laexis Advisory</h1>
-
-<p>Cross-border Business Advisor</p>
-
-<p>Japan–International Business Coordination</p>
-
-<p>Based in Yokohama & Tokyo</p>
-
-</div>
-
-
-<div class="container">
-
-<h2>Introduction</h2>
-
-<p>
-Laexis Advisory provides cross-border coordination and business advisory
-services for companies and law firms involved in Japan–International transactions.
-</p>
-
-<p>
-Based in Japan, we assist International clients in navigating commercial
-interactions with Japanese companies and institutions by providing local
-communication support, transaction preparation assistance, and cross-border
-business insight.
-</p>
-
-<div class="highlight">
-
-<strong>Core Focus</strong>
-
-<ul>
-<li>Japan–International business coordination</li>
-<li>Cross-border commercial communication</li>
-<li>Support for International clients dealing with Japan-related matters</li>
-<li>International market advisory for Japanese clients</li>
-</ul>
-
-</div>
-
-<h2>Professional Background</h2>
-
-<p>
-The advisor behind Laexis is a China-qualified lawyer with more than 15 years
-of experience in corporate legal work, international business transactions,
-and cross-border commercial coordination, who is living in Japan for more than 20 years.
-</p>
-
-<p>
-Having worked across legal, corporate, and advisory environments, Laexis
-focuses on practical support for International clients who require reliable
-local coordination in Japan when engaging with Japanese companies,
-professionals, or business partners.
-</p>
-
-<h2>Typical Engagements</h2>
-
-<ul>
-
-<li>Supporting International law firms in communication with Japanese companies</li>
-
-<li>Providing local coordination for cross-border commercial negotiations</li>
-
-<li>Assisting international investors exploring opportunities in Japan</li>
-
-<li>Advising Japanese companies seeking insight into the International market</li>
-
-<li>Coordinating with Japanese legal and professional advisors when required</li>
-
-</ul>
-
-
-<h2>Location</h2>
-
-<p>
-Laexis Advisory is based in Yokohama and operates frequently in Tokyo,
-supporting clients across Japan and oversea.
-</p>
-
-
-<h2>Contact</h2>
-
-<div class="contact">
-
-<p>Email: Contact@Laexis.com</p>
-
-</div>
- <!-- Added herein 👇 -->
-    <div style="text-align:center; margin-top:40px;">
-      <a href="/" style="display:inline-block; padding:12px 28px; background:#0f2747; color:white; text-decoration:none; border-radius:4px; font-size:16px;">
-        ← Return to Main Page
-      </a>
+  <div class="page-shell">
+    <div class="topbar">
+      <a class="brand" href="/">Laexis Advisory</a>
+      <a class="back-link" href="/Services.html">← Back to language selection</a>
     </div>
-</div>
 
+    <header class="hero">
+      <span class="eyebrow">English Services</span>
+      <h1>Cross-border Business Advisory for Japan-related Matters</h1>
+      <p class="lead">
+        Practical support for international companies, investors, and law firms
+        engaging with Japanese counterparties, institutions, and markets.
+      </p>
+    </header>
 
-<div class="footer">
+    <div class="content-grid">
+      <main class="main-card">
+        <section>
+          <h2>Introduction</h2>
+          <p>
+            Laexis Advisory provides cross-border coordination and business
+            advisory services for companies and law firms involved in
+            Japan-related transactions and commercial projects.
+          </p>
+          <p>
+            Based in Japan, we support international clients by helping them
+            communicate effectively with Japanese companies and institutions,
+            prepare for commercial interactions, and navigate local business
+            practices with confidence.
+          </p>
 
-Laexis Advisory  
-Cross-border Business Coordination | Japan – Oversea
+          <div class="highlight">
+            <strong>Core Focus</strong>
+            <ul>
+              <li>Japan-international business coordination</li>
+              <li>Cross-border commercial communication support</li>
+              <li>Support for international clients handling Japan-related matters</li>
+              <li>International market advisory for Japanese clients</li>
+            </ul>
+          </div>
+        </section>
 
-</div>
+        <section>
+          <h2>Professional Background</h2>
+          <p>
+            The advisor behind Laexis is a China-qualified lawyer with more
+            than 15 years of experience in corporate legal work, international
+            business transactions, and cross-border commercial coordination,
+            and has lived in Japan for more than 20 years.
+          </p>
+          <p>
+            Drawing on experience across legal, corporate, and advisory
+            environments, Laexis focuses on practical support for international
+            clients who need reliable local coordination in Japan when dealing
+            with Japanese companies, professionals, or business partners.
+          </p>
+        </section>
 
+        <section>
+          <h2>Typical Engagements</h2>
+          <ul>
+            <li>Supporting international law firms in communication with Japanese companies</li>
+            <li>Providing local coordination for cross-border commercial negotiations</li>
+            <li>Assisting international investors exploring opportunities in Japan</li>
+            <li>Advising Japanese companies seeking insight into overseas markets</li>
+            <li>Coordinating with Japanese legal and professional advisors when required</li>
+          </ul>
+        </section>
 
+        <section>
+          <h2>Contact</h2>
+          <p>
+            Please contact us if you would like to discuss Japan-related
+            commercial, regulatory, or coordination matters.
+          </p>
+          <p><a class="contact-link" href="mailto:Contact@Laexis.com">Contact@Laexis.com</a></p>
+        </section>
+      </main>
+
+      <aside class="side-card">
+        <div class="meta-list">
+          <div class="meta-item">
+            <h3>Location</h3>
+            <p>Based in Yokohama and active in Tokyo, supporting clients across Japan and overseas.</p>
+          </div>
+          <div class="meta-item">
+            <h3>Approach</h3>
+            <p>Clear communication, practical coordination, and commercially grounded advice.</p>
+          </div>
+          <div class="meta-item">
+            <h3>Who We Support</h3>
+            <p>Companies, investors, and law firms working on Japan-related business matters.</p>
+          </div>
+        </div>
+
+        <div class="contact-box">
+          <a class="back-link" href="/">Return to main page</a>
+        </div>
+
+        <div class="footer-note">
+          Laexis Advisory provides business consulting and coordination support
+          in connection with Japan-related cross-border matters.
+        </div>
+      </aside>
+    </div>
+  </div>
 </body>
 </html>

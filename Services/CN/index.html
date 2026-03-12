@@ -3,184 +3,337 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>Laexis Advisory | 跨境商务顾问</title>
-
 <style>
-
-body{
-margin:0;
-font-family: "Helvetica Neue", Arial, sans-serif;
-color:#333;
-background:#f7f9fb;
-line-height:1.6;
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-strong: #ffffff;
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --brand-soft: #e7efe8;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 26px;
 }
 
-.header{
-background:#0f2747;
-color:white;
-padding:80px 20px;
-text-align:center;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.header h1{
-font-size:40px;
-margin-bottom:10px;
+body {
+  margin: 0;
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+  line-height: 1.8;
 }
 
-.header p{
-font-size:18px;
-opacity:0.9;
+a {
+  color: inherit;
 }
 
-.container{
-max-width:950px;
-margin:auto;
-padding:60px 20px;
-background:white;
+.page-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 28px 0 56px;
 }
 
-h2{
-color:#0f2747;
-margin-top:40px;
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.section{
-margin-top:30px;
+.brand {
+  color: var(--brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
 }
 
-.highlight{
-background:#eef3f8;
-padding:20px;
-border-left:4px solid #0f2747;
-margin-top:20px;
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
 }
 
-ul{
-margin-top:10px;
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--brand);
 }
 
-.footer{
-margin-top:60px;
-padding:40px;
-text-align:center;
-background:#0f2747;
-color:white;
-font-size:14px;
+.hero {
+  padding: clamp(2rem, 5vw, 4rem);
+  background: linear-gradient(145deg, rgba(18, 49, 79, 0.96), rgba(35, 77, 116, 0.94));
+  border-radius: 30px;
+  color: #fff;
+  box-shadow: var(--shadow);
 }
 
-.contact{
-margin-top:20px;
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-a{
-color:#0f2747;
-text-decoration:none;
-font-weight:bold;
+.hero h1 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(2.1rem, 5vw, 4rem);
+  line-height: 1.08;
 }
 
+.hero .lead {
+  margin: 0;
+  max-width: 44rem;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.main-card,
+.side-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.main-card {
+  padding: clamp(1.4rem, 3vw, 2.4rem);
+}
+
+.side-card {
+  padding: 1.5rem;
+}
+
+section + section {
+  margin-top: 2rem;
+}
+
+h2 {
+  margin: 0 0 0.8rem;
+  color: var(--brand);
+  font-size: clamp(1.3rem, 2.3vw, 1.7rem);
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+li + li {
+  margin-top: 0.6rem;
+}
+
+.highlight {
+  margin-top: 1.1rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--brand-soft);
+  border-left: 4px solid var(--brand);
+  border-radius: 0 16px 16px 0;
+}
+
+.highlight strong {
+  display: block;
+  margin-bottom: 0.6rem;
+  color: var(--brand);
+}
+
+.meta-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.meta-item {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.meta-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.meta-item h3 {
+  margin: 0 0 0.35rem;
+  color: var(--brand);
+  font-size: 1rem;
+}
+
+.meta-item p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.contact-box {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.contact-link {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.footer-note {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.4rem;
+  background: rgba(18, 49, 79, 0.06);
+  border-radius: 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 960px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(1120px, calc(100% - 1.25rem));
+    padding: 18px 0 32px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .hero {
+    border-radius: 22px;
+    padding: 1.4rem;
+  }
+
+  .main-card,
+  .side-card {
+    border-radius: 20px;
+    padding: 1.2rem;
+  }
+}
 </style>
 </head>
-
 <body>
-
-<div class="header">
-
-<h1>Laexis Advisory</h1>
-
-<p>跨境商务顾问</p>
-
-<p>日本–中国商务协调</p>
-
-<p>常驻东京与横滨</p>
-
-</div>
-
-
-<div class="container">
-
-<h2>简介</h2>
-
-<p>
-Laexis Advisory 为参与中日交易的企业和律所提供跨境协调与商务咨询服务。
-</p>
-
-<p>
-Laexis Advisory 成员常驻日本，为中国客户在与日本企业及各类机构开展商业往来时，提供本地沟通支持、交易准备协助以及跨境商务视角，帮助其顺利推进日本相关业务；同时也为在日华人企业与海外的各类商业交易等提供各类咨询服务。
-</p>
-
-<div class="highlight">
-
-<strong>核心领域</strong>
-
-<ul>
-<li>中日商务协调</li>
-<li>跨境商业沟通支持</li>
-<li>为中国国内客户处理日本相关事务提供协助</li>
-<li>为在日中国客户提供包括日本国内或海外市场相关顾问服务</li>
-</ul>
-
-</div>
-
-<h2>专业背景</h2>
-
-<p>
-Laexis Advisory 背后的顾问曾是中国执业律师，在日本生活逾 20 年，拥有超过 15 年的日本本地企业法务经验、以及国际商务交易和跨境商务协调的实务经验。
-</p>
-
-<p>
-凭借在法律、企业与顾问领域的综合经历，Laexis Advisory 专注为需要在日本与当地企业、专业人士或商业合作方打交道的中国客户，以及在日本以外地区需要专业服务的在日华人提供务实可靠的协调支持。
-</p>
-
-<h2>典型服务场景</h2>
-
-<ul>
-
-<li>协助中国律所与日本企业进行沟通与联系</li>
-
-<li>为跨境商业谈判提供本地协调与跟进</li>
-
-<li>协助中国投资者探索日本市场机会</li>
-
-<li>为寻求了解日本以外的海外市场的在日华人企业提供分析与建议</li>
-
-<li>在需要时协调日本律师及其他专业顾问参与项目</li>
-
-<li>等其他咨询业务</li>
-
-</ul>
-
-
-<h2>所在地</h2>
-
-<p>
-Laexis Advisory 成员常驻东京/横滨，并经常在东京/横滨活动，可为遍布中国的国内客户以及在日华人客户提供支持。
-</p>
-
-
-<h2>联系方式</h2>
-
-<div class="contact">
-
-<p>邮箱：Contact@Laexis.com</p>
-
-</div>
- <!-- 添加这里 👇 -->
-    <div style="text-align:center; margin-top:40px;">
-      <a href="/" style="display:inline-block; padding:12px 28px; background:#0f2747; color:white; text-decoration:none; border-radius:4px; font-size:16px;">
-        ← 返回首页
-      </a>
+  <div class="page-shell">
+    <div class="topbar">
+      <a class="brand" href="/">Laexis Advisory</a>
+      <a class="back-link" href="/Services.html">← 返回语言选择页</a>
     </div>
-</div>
 
+    <header class="hero">
+      <span class="eyebrow">Chinese Services</span>
+      <h1>日本相关跨境商务顾问服务</h1>
+      <p class="lead">
+        为与日本企业、机构或市场发生业务联系的海外企业、投资人及律师事务所提供务实支持。
+      </p>
+    </header>
 
-<div class="footer">
+    <div class="content-grid">
+      <main class="main-card">
+        <section>
+          <h2>简介</h2>
+          <p>
+            Laexis Advisory 为涉及日本相关交易、商务合作及跨境项目的企业和律师事务所提供跨境协调与商业顾问服务。
+          </p>
+          <p>
+            我们立足日本，协助国际客户与日本企业及机构进行高效沟通，支持商业接洽前的准备工作，并帮助客户更稳妥地理解日本本地商业实践和沟通方式。
+          </p>
 
-Laexis Advisory  
-跨境商务协调 | 日本 – 中国
+          <div class="highlight">
+            <strong>核心服务方向</strong>
+            <ul>
+              <li>日本相关国际商务协调</li>
+              <li>跨境商业沟通支持</li>
+              <li>协助海外客户处理日本相关事务</li>
+              <li>为日本客户提供海外市场信息与沟通支持</li>
+            </ul>
+          </div>
+        </section>
 
-</div>
+        <section>
+          <h2>专业背景</h2>
+          <p>
+            Laexis 的顾问具备中国律师资格，在企业法务、国际商务交易及跨境商业协调方面拥有超过 15 年经验，并已在日本生活超过 20 年。
+          </p>
+          <p>
+            基于法律、企业与顾问服务领域的复合经验，我们专注于为国际客户提供务实、可靠的日本本地协调支持，帮助客户与日本企业、专业人士及合作伙伴更顺畅地开展业务。
+          </p>
+        </section>
 
+        <section>
+          <h2>典型服务场景</h2>
+          <ul>
+            <li>协助国际律师事务所与日本企业进行沟通协调</li>
+            <li>为跨境商业谈判提供本地支持</li>
+            <li>支持海外投资者评估和探索日本市场机会</li>
+            <li>为日本企业了解海外市场提供信息与沟通协助</li>
+            <li>在需要时协助对接日本律师、会计师及其他专业机构</li>
+          </ul>
+        </section>
 
+        <section>
+          <h2>联系方式</h2>
+          <p>
+            如需讨论与日本相关的商务、监管或沟通协调事宜，欢迎联系我们。
+          </p>
+          <p><a class="contact-link" href="mailto:Contact@Laexis.com">Contact@Laexis.com</a></p>
+        </section>
+      </main>
+
+      <aside class="side-card">
+        <div class="meta-list">
+          <div class="meta-item">
+            <h3>所在地</h3>
+            <p>立足横滨，并经常在东京开展工作，为日本全国及海外客户提供支持。</p>
+          </div>
+          <div class="meta-item">
+            <h3>工作方式</h3>
+            <p>强调清晰沟通、务实协调以及符合商业实际的支持方案。</p>
+          </div>
+          <div class="meta-item">
+            <h3>服务对象</h3>
+            <p>面向企业、投资人及律师事务所的日本相关商务项目与事务。</p>
+          </div>
+        </div>
+
+        <div class="contact-box">
+          <a class="back-link" href="/">返回主页</a>
+        </div>
+
+        <div class="footer-note">
+          Laexis Advisory 提供与日本相关的跨境商业顾问与协调支持服务。
+        </div>
+      </aside>
+    </div>
+  </div>
 </body>
 </html>
