@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Information Search | Laexis Advisory</title>
-<meta name="description" content="Search selected Japanese law firm knowledge pages from a single interface.">
+<title>Legal Information Navigator | Laexis Advisory</title>
+<meta name="description" content="Navigate official legal information resources from selected Japanese law firms.">
 <style>
 :root {
   --bg: #f3efe7;
@@ -123,11 +123,6 @@ h1 {
   background: var(--surface-strong);
 }
 
-.search-input:focus {
-  outline: 2px solid rgba(18, 49, 79, 0.14);
-  border-color: rgba(18, 49, 79, 0.24);
-}
-
 .search-button {
   border: 0;
   border-radius: 999px;
@@ -139,11 +134,6 @@ h1 {
   cursor: pointer;
 }
 
-.search-button:hover,
-.search-button:focus-visible {
-  background: #194165;
-}
-
 .hint {
   margin: 0.9rem 0 0;
   color: var(--muted);
@@ -151,22 +141,21 @@ h1 {
 }
 
 .results-card {
-  overflow: hidden;
+  padding: 1.4rem;
 }
 
 .results-head {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
   gap: 1rem;
-  padding: 1.3rem 1.4rem;
-  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.25rem;
 }
 
 .results-head h2 {
   margin: 0;
   color: var(--brand);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 .status {
@@ -174,51 +163,79 @@ h1 {
   font-size: 0.95rem;
 }
 
-.table-wrap {
-  overflow-x: auto;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 860px;
+.result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  padding: 1.2rem;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 20px;
 }
 
-th,
-td {
-  padding: 1rem 1.1rem;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  vertical-align: top;
-}
-
-th {
-  background: rgba(18, 49, 79, 0.05);
+.firm {
   color: var(--brand);
-  font-size: 0.9rem;
-}
-
-td {
-  font-size: 0.96rem;
-  line-height: 1.7;
-}
-
-.result-link {
-  color: var(--brand);
+  font-size: 1.05rem;
   font-weight: 700;
-  text-decoration: none;
-  word-break: break-word;
 }
 
-.empty,
-.error-box {
-  padding: 1.4rem;
+.card-title {
+  margin: 0;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.card-summary {
+  margin: 0;
   color: var(--muted);
+  line-height: 1.8;
 }
 
-.error-box {
-  color: #8b2d2d;
-  background: rgba(139, 45, 45, 0.06);
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  display: inline-flex;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.85rem 1.1rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  margin-top: auto;
+}
+
+.card-link:hover,
+.search-button:hover {
+  background: #194165;
+}
+
+@media (max-width: 960px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
@@ -254,11 +271,11 @@ td {
     </div>
 
     <section class="hero">
-      <span class="eyebrow">Legal Information Tool</span>
-      <h1>法律信息检索</h1>
+      <span class="eyebrow">Legal Information Navigator</span>
+      <h1>官方法律信息导航</h1>
       <p class="lead">
-        输入日语关键词后，同时检索 Anderson Mori & Tomotsune、Nishimura & Asahi、
-        Nagashima Ohno & Tsunematsu 的公开知识内容，并将结果整理为统一表格。
+        输入日语关键词后，快速前往主要日本律所的官方知识页面。这个工具强调稳定和可用性，
+        适合你先定位资料入口，再到官网继续深入检索。
       </p>
 
       <form class="search-form" id="search-form">
@@ -267,51 +284,48 @@ td {
           id="keyword"
           name="keyword"
           type="search"
-          placeholder="例：個人情報、フリーランス法、M&A"
+          placeholder="例：個人情報、労務、M&A、コンプライアンス"
           required
         >
         <button class="search-button" type="submit">Search</button>
       </form>
 
       <p class="hint">
-        当前为混合模式：优先显示可稳定匹配的结果，并为暂不适合自动抓取的律所提供官网入口。
+        建议输入日语关键词。页面会生成三个官方入口，帮助你在各律所官网继续查找。
       </p>
     </section>
 
     <section class="results-card">
       <div class="results-head">
-        <h2>Search Results</h2>
-        <div class="status" id="status">请输入关键词后开始搜索。</div>
+        <h2>Official Entry Points</h2>
+        <div class="status" id="status">请输入关键词后生成导航入口。</div>
       </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>律所名称</th>
-              <th>标题</th>
-              <th>大概内容</th>
-              <th>链接</th>
-            </tr>
-          </thead>
-          <tbody id="results-body">
-            <tr>
-              <td class="empty" colspan="4">暂无结果。</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="cards" id="results-cards">
+        <article class="result-card">
+          <div class="firm">Anderson Mori & Tomotsune</div>
+          <p class="card-title">Insights Search</p>
+          <p class="card-summary">Use this entry point to browse AMT's insights and featured knowledge pages.</p>
+        </article>
+        <article class="result-card">
+          <div class="firm">Nishimura & Asahi</div>
+          <p class="card-title">Knowledge</p>
+          <p class="card-summary">Use this entry point to review Nishimura's official knowledge hub.</p>
+        </article>
+        <article class="result-card">
+          <div class="firm">Nagashima Ohno & Tsunematsu</div>
+          <p class="card-title">Newsletters</p>
+          <p class="card-summary">Use this entry point to review NO&T's official newsletter categories.</p>
+        </article>
       </div>
-      <div id="error-box"></div>
     </section>
   </div>
 
 <script>
-const API_ENDPOINT = "/api/legal-information-search";
 const form = document.getElementById("search-form");
 const keywordInput = document.getElementById("keyword");
-const resultsBody = document.getElementById("results-body");
 const statusText = document.getElementById("status");
-const errorBox = document.getElementById("error-box");
+const resultsCards = document.getElementById("results-cards");
 
 function escapeHtml(value) {
   return value
@@ -322,42 +336,49 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function renderRows(results) {
-  if (!results.length) {
-    resultsBody.innerHTML = '<tr><td class="empty" colspan="4">没有找到匹配结果。</td></tr>';
-    return;
-  }
+function buildCards(keyword) {
+  const encodedKeyword = encodeURIComponent(keyword);
 
-  resultsBody.innerHTML = results.map((item) => `
-    <tr>
-      <td>${escapeHtml(item.firm || "")}</td>
-      <td>${escapeHtml(item.title || "")}</td>
-      <td>${escapeHtml(item.summary || "")}</td>
-      <td><a class="result-link" href="${escapeHtml(item.url || "#")}" target="_blank" rel="noopener noreferrer">Open Link</a></td>
-    </tr>
+  const cards = [
+    {
+      firm: "Anderson Mori & Tomotsune",
+      title: `AMT Insights: ${keyword}`,
+      summary: "Open AMT's official insights page and continue searching within its published legal updates and featured materials.",
+      tags: ["Official", "Insights", "Featured"],
+      url: `https://www.amt-law.com/insights/search/?insightsCategories[]=featured_insights`,
+      cta: "Open AMT",
+    },
+    {
+      firm: "Nishimura & Asahi",
+      title: `Nishimura Knowledge: ${keyword}`,
+      summary: "Open Nishimura's official knowledge hub. Direct automated retrieval is limited, so this tool guides you to the authoritative source.",
+      tags: ["Official", "Knowledge", "Research"],
+      url: `https://www.nishimura.com/ja/knowledge`,
+      cta: "Open Nishimura",
+    },
+    {
+      firm: "Nagashima Ohno & Tsunematsu",
+      title: `NO&T Newsletters: ${keyword}`,
+      summary: "Open NO&T's official newsletter and legal update categories for topic-based browsing.",
+      tags: ["Official", "Newsletters", "Topics"],
+      url: `https://www.nagashima.com/newsletters/`,
+      cta: "Open NO&T",
+    },
+  ];
+
+  resultsCards.innerHTML = cards.map((card) => `
+    <article class="result-card">
+      <div class="firm">${escapeHtml(card.firm)}</div>
+      <p class="card-title">${escapeHtml(card.title)}</p>
+      <p class="card-summary">${escapeHtml(card.summary)}</p>
+      <div class="card-tags">
+        ${card.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
+      </div>
+      <a class="card-link" href="${escapeHtml(card.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(card.cta)}</a>
+    </article>
   `).join("");
-}
 
-async function search(keyword) {
-  statusText.textContent = "正在搜索，请稍候...";
-  errorBox.innerHTML = "";
-  resultsBody.innerHTML = '<tr><td class="empty" colspan="4">Loading...</td></tr>';
-
-  try {
-    const response = await fetch(`${API_ENDPOINT}?q=${encodeURIComponent(keyword)}`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Search failed.");
-    }
-
-    renderRows(data.results || []);
-    statusText.textContent = `找到 ${data.results.length} 条结果。部分行为自动匹配结果，部分为官网入口。`;
-  } catch (error) {
-    statusText.textContent = "搜索未完成。";
-    resultsBody.innerHTML = '<tr><td class="empty" colspan="4">暂无结果。</td></tr>';
-    errorBox.innerHTML = `<div class="error-box">${escapeHtml(error.message || "Search failed.")}</div>`;
-  }
+  statusText.textContent = `已根据关键词“${keyword}”生成 3 个官方入口。`;
 }
 
 form.addEventListener("submit", (event) => {
@@ -369,7 +390,7 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  search(keyword);
+  buildCards(keyword);
 });
 </script>
 </body>
