@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Legal Information Navigator | Laexis Advisory</title>
-<meta name="description" content="Navigate official legal information resources from selected Japanese law firms.">
+<meta name="description" content="Official legal information entry points for selected Japanese law firms.">
 <style>
 :root {
   --bg: #f3efe7;
@@ -100,44 +100,10 @@ h1 {
 }
 
 .lead {
-  margin: 0 0 1.5rem;
+  margin: 0;
   max-width: 52rem;
   color: var(--muted);
   line-height: 1.8;
-}
-
-.search-form {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.9rem;
-  align-items: center;
-}
-
-.search-input {
-  width: 100%;
-  padding: 1rem 1.1rem;
-  border: 1px solid rgba(18, 49, 79, 0.18);
-  border-radius: 16px;
-  font-size: 1rem;
-  color: var(--text);
-  background: var(--surface-strong);
-}
-
-.search-button {
-  border: 0;
-  border-radius: 999px;
-  padding: 1rem 1.4rem;
-  background: var(--brand);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.hint {
-  margin: 0.9rem 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
 }
 
 .results-card {
@@ -145,10 +111,6 @@ h1 {
 }
 
 .results-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
@@ -156,11 +118,6 @@ h1 {
   margin: 0;
   color: var(--brand);
   font-size: 1.4rem;
-}
-
-.status {
-  color: var(--muted);
-  font-size: 0.95rem;
 }
 
 .cards {
@@ -227,8 +184,7 @@ h1 {
   margin-top: auto;
 }
 
-.card-link:hover,
-.search-button:hover {
+.card-link:hover {
   background: #194165;
 }
 
@@ -244,16 +200,9 @@ h1 {
     padding: 18px 0 32px;
   }
 
-  .topbar,
-  .results-head,
-  .search-form {
-    grid-template-columns: 1fr;
+  .topbar {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .search-button {
-    width: 100%;
   }
 
   .hero,
@@ -272,126 +221,61 @@ h1 {
 
     <section class="hero">
       <span class="eyebrow">Legal Information Navigator</span>
-      <h1>官方法律信息导航</h1>
+      <h1>官方法律信息入口</h1>
       <p class="lead">
-        输入日语关键词后，快速前往主要日本律所的官方知识页面。这个工具强调稳定和可用性，
-        适合你先定位资料入口，再到官网继续深入检索。
-      </p>
-
-      <form class="search-form" id="search-form">
-        <input
-          class="search-input"
-          id="keyword"
-          name="keyword"
-          type="search"
-          placeholder="例：個人情報、労務、M&A、コンプライアンス"
-          required
-        >
-        <button class="search-button" type="submit">Search</button>
-      </form>
-
-      <p class="hint">
-        建议输入日语关键词。页面会生成三个官方入口，帮助你在各律所官网继续查找。
+        这里整理了三家主要日本律所的官方知识入口，方便你直接进入官网继续检索和浏览。
       </p>
     </section>
 
     <section class="results-card">
       <div class="results-head">
         <h2>Official Entry Points</h2>
-        <div class="status" id="status">请输入关键词后生成导航入口。</div>
       </div>
 
-      <div class="cards" id="results-cards">
+      <div class="cards">
         <article class="result-card">
-          <div class="firm">Anderson Mori & Tomotsune</div>
-          <p class="card-title">Insights Search</p>
-          <p class="card-summary">Use this entry point to browse AMT's insights and featured knowledge pages.</p>
+          <div class="firm">Anderson Mori &amp; Tomotsune</div>
+          <p class="card-title">AMT Insights</p>
+          <p class="card-summary">
+            Official insights and featured legal updates from Anderson Mori &amp; Tomotsune.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Official</span>
+            <span class="tag">Insights</span>
+            <span class="tag">Featured</span>
+          </div>
+          <a class="card-link" href="https://www.amt-law.com/insights/search/?insightsCategories[]=featured_insights" target="_blank" rel="noopener noreferrer">Open AMT</a>
         </article>
+
         <article class="result-card">
-          <div class="firm">Nishimura & Asahi</div>
-          <p class="card-title">Knowledge</p>
-          <p class="card-summary">Use this entry point to review Nishimura's official knowledge hub.</p>
+          <div class="firm">Nishimura &amp; Asahi</div>
+          <p class="card-title">Nishimura Knowledge</p>
+          <p class="card-summary">
+            Official legal knowledge hub from Nishimura &amp; Asahi.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Official</span>
+            <span class="tag">Knowledge</span>
+            <span class="tag">Research</span>
+          </div>
+          <a class="card-link" href="https://www.nishimura.com/ja/knowledge" target="_blank" rel="noopener noreferrer">Open Nishimura</a>
         </article>
+
         <article class="result-card">
-          <div class="firm">Nagashima Ohno & Tsunematsu</div>
-          <p class="card-title">Newsletters</p>
-          <p class="card-summary">Use this entry point to review NO&T's official newsletter categories.</p>
+          <div class="firm">Nagashima Ohno &amp; Tsunematsu</div>
+          <p class="card-title">NO&amp;T Newsletters</p>
+          <p class="card-summary">
+            Official newsletters and legal update categories from Nagashima Ohno &amp; Tsunematsu.
+          </p>
+          <div class="card-tags">
+            <span class="tag">Official</span>
+            <span class="tag">Newsletters</span>
+            <span class="tag">Topics</span>
+          </div>
+          <a class="card-link" href="https://www.nagashima.com/newsletters/" target="_blank" rel="noopener noreferrer">Open NO&amp;T</a>
         </article>
       </div>
     </section>
   </div>
-
-<script>
-const form = document.getElementById("search-form");
-const keywordInput = document.getElementById("keyword");
-const statusText = document.getElementById("status");
-const resultsCards = document.getElementById("results-cards");
-
-function escapeHtml(value) {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function buildCards(keyword) {
-  const encodedKeyword = encodeURIComponent(keyword);
-
-  const cards = [
-    {
-      firm: "Anderson Mori & Tomotsune",
-      title: `AMT Insights: ${keyword}`,
-      summary: "Open AMT's official insights page and continue searching within its published legal updates and featured materials.",
-      tags: ["Official", "Insights", "Featured"],
-      url: `https://www.amt-law.com/insights/search/?insightsCategories[]=featured_insights`,
-      cta: "Open AMT",
-    },
-    {
-      firm: "Nishimura & Asahi",
-      title: `Nishimura Knowledge: ${keyword}`,
-      summary: "Open Nishimura's official knowledge hub. Direct automated retrieval is limited, so this tool guides you to the authoritative source.",
-      tags: ["Official", "Knowledge", "Research"],
-      url: `https://www.nishimura.com/ja/knowledge`,
-      cta: "Open Nishimura",
-    },
-    {
-      firm: "Nagashima Ohno & Tsunematsu",
-      title: `NO&T Newsletters: ${keyword}`,
-      summary: "Open NO&T's official newsletter and legal update categories for topic-based browsing.",
-      tags: ["Official", "Newsletters", "Topics"],
-      url: `https://www.nagashima.com/newsletters/`,
-      cta: "Open NO&T",
-    },
-  ];
-
-  resultsCards.innerHTML = cards.map((card) => `
-    <article class="result-card">
-      <div class="firm">${escapeHtml(card.firm)}</div>
-      <p class="card-title">${escapeHtml(card.title)}</p>
-      <p class="card-summary">${escapeHtml(card.summary)}</p>
-      <div class="card-tags">
-        ${card.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}
-      </div>
-      <a class="card-link" href="${escapeHtml(card.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(card.cta)}</a>
-    </article>
-  `).join("");
-
-  statusText.textContent = `已根据关键词“${keyword}”生成 3 个官方入口。`;
-}
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const keyword = keywordInput.value.trim();
-
-  if (!keyword) {
-    statusText.textContent = "请输入关键词。";
-    return;
-  }
-
-  buildCards(keyword);
-});
-</script>
 </body>
 </html>
