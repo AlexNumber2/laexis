@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Information Search | Laexis Advisory</title>
+<meta name="description" content="Search selected Japanese law firm knowledge pages from a single interface.">
+<style>
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-strong: #ffffff;
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --brand-soft: #e7efe8;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 26px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Yu Gothic", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+}
+
+a {
+  color: inherit;
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.brand {
+  color: var(--brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.hero,
+.results-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.hero {
+  padding: clamp(1.5rem, 3vw, 2.6rem);
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(18, 49, 79, 0.08);
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 0.9rem;
+  color: var(--brand);
+  font-size: clamp(2rem, 4.8vw, 3.8rem);
+  line-height: 1.08;
+}
+
+.lead {
+  margin: 0 0 1.5rem;
+  max-width: 52rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(18, 49, 79, 0.18);
+  border-radius: 16px;
+  font-size: 1rem;
+  color: var(--text);
+  background: var(--surface-strong);
+}
+
+.search-input:focus {
+  outline: 2px solid rgba(18, 49, 79, 0.14);
+  border-color: rgba(18, 49, 79, 0.24);
+}
+
+.search-button {
+  border: 0;
+  border-radius: 999px;
+  padding: 1rem 1.4rem;
+  background: var(--brand);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.search-button:hover,
+.search-button:focus-visible {
+  background: #194165;
+}
+
+.hint {
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.results-card {
+  overflow: hidden;
+}
+
+.results-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.3rem 1.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.results-head h2 {
+  margin: 0;
+  color: var(--brand);
+  font-size: 1.2rem;
+}
+
+.status {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+th,
+td {
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: rgba(18, 49, 79, 0.05);
+  color: var(--brand);
+  font-size: 0.9rem;
+}
+
+td {
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
+
+.result-link {
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.empty,
+.error-box {
+  padding: 1.4rem;
+  color: var(--muted);
+}
+
+.error-box {
+  color: #8b2d2d;
+  background: rgba(139, 45, 45, 0.06);
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(1180px, calc(100% - 1.25rem));
+    padding: 18px 0 32px;
+  }
+
+  .topbar,
+  .results-head,
+  .search-form {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .hero,
+  .results-card {
+    border-radius: 20px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <a class="brand" href="/">Laexis Advisory</a>
+      <a class="back-link" href="/">← Back to Home</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">Legal Information Tool</span>
+      <h1>法律信息检索</h1>
+      <p class="lead">
+        输入日语关键词后，同时检索 Anderson Mori & Tomotsune、Nishimura & Asahi、
+        Nagashima Ohno & Tsunematsu 的公开知识内容，并将结果整理为统一表格。
+      </p>
+
+      <form class="search-form" id="search-form">
+        <input
+          class="search-input"
+          id="keyword"
+          name="keyword"
+          type="search"
+          placeholder="例：個人情報、フリーランス法、M&A"
+          required
+        >
+        <button class="search-button" type="submit">Search</button>
+      </form>
+
+      <p class="hint">
+        结果来源于对指定律所网站的限定域名检索。请尽量输入日语关键词以获得更好的结果。
+      </p>
+    </section>
+
+    <section class="results-card">
+      <div class="results-head">
+        <h2>Search Results</h2>
+        <div class="status" id="status">请输入关键词后开始搜索。</div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>律所名称</th>
+              <th>标题</th>
+              <th>大概内容</th>
+              <th>链接</th>
+            </tr>
+          </thead>
+          <tbody id="results-body">
+            <tr>
+              <td class="empty" colspan="4">暂无结果。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="error-box"></div>
+    </section>
+  </div>
+
+<script>
+const API_ENDPOINT = "/api/legal-information-search";
+const form = document.getElementById("search-form");
+const keywordInput = document.getElementById("keyword");
+const resultsBody = document.getElementById("results-body");
+const statusText = document.getElementById("status");
+const errorBox = document.getElementById("error-box");
+
+function escapeHtml(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function renderRows(results) {
+  if (!results.length) {
+    resultsBody.innerHTML = '<tr><td class="empty" colspan="4">没有找到匹配结果。</td></tr>';
+    return;
+  }
+
+  resultsBody.innerHTML = results.map((item) => `
+    <tr>
+      <td>${escapeHtml(item.firm || "")}</td>
+      <td>${escapeHtml(item.title || "")}</td>
+      <td>${escapeHtml(item.summary || "")}</td>
+      <td><a class="result-link" href="${escapeHtml(item.url || "#")}" target="_blank" rel="noopener noreferrer">Open Link</a></td>
+    </tr>
+  `).join("");
+}
+
+async function search(keyword) {
+  statusText.textContent = "正在搜索，请稍候...";
+  errorBox.innerHTML = "";
+  resultsBody.innerHTML = '<tr><td class="empty" colspan="4">Loading...</td></tr>';
+
+  try {
+    const response = await fetch(`${API_ENDPOINT}?q=${encodeURIComponent(keyword)}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Search failed.");
+    }
+
+    renderRows(data.results || []);
+    statusText.textContent = `找到 ${data.results.length} 条结果。`;
+  } catch (error) {
+    statusText.textContent = "搜索未完成。";
+    resultsBody.innerHTML = '<tr><td class="empty" colspan="4">暂无结果。</td></tr>';
+    errorBox.innerHTML = `<div class="error-box">${escapeHtml(error.message || "Search failed.")}</div>`;
+  }
+}
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const keyword = keywordInput.value.trim();
+
+  if (!keyword) {
+    statusText.textContent = "请输入关键词。";
+    return;
+  }
+
+  search(keyword);
+});
+</script>
+</body>
+</html>
