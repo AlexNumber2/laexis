@@ -3,89 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laexis Advisory - Introduction</title>
+<title>Laexis Advisory - Services</title>
 <style>
-body{
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  background:#f7f9fb;
-  margin:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-  color:#333;
-  text-align:center;
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-strong: #ffffff;
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --brand-soft: #e7efe8;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 26px;
 }
-.container{
-  max-width:600px;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-h2{
-  color:#0f2747;
-  font-size:28px;
-  margin-bottom:10px;
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
 }
-.subtitle{
-  color:#555;
-  font-size:16px;
-  margin-bottom:40px;
+
+.page-shell {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 32px 0 56px;
 }
-.lang-buttons{
-  display:flex;
-  gap:20px;
-  justify-content:center;
-  flex-wrap:wrap;
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
-.lang-btn{
-  display:inline-block;
-  padding:14px 32px;
-  background:#0f2747;
-  color:white;
-  text-decoration:none;
-  border-radius:4px;
-  font-size:16px;
-  transition:background 0.2s;
-  min-width:140px;
+
+.brand {
+  color: var(--brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
 }
-.lang-btn:hover{
-  background:#1b3f6e;
+
+.back {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
 }
-.lang-btn .label{
-  font-size:12px;
-  opacity:0.75;
-  display:block;
-  margin-top:4px;
+
+.back:hover,
+.back:focus-visible {
+  color: var(--brand);
 }
-.back{
-  margin-top:40px;
-  display:block;
-  font-size:14px;
-  color:#888;
-  text-decoration:none;
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 1.5rem;
+  align-items: stretch;
 }
-.back:hover{ color:#0f2747; }
+
+.hero-card,
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.hero-card {
+  padding: clamp(1.5rem, 3vw, 3rem);
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(18, 49, 79, 0.08);
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  color: var(--brand);
+  font-size: clamp(2rem, 4.8vw, 3.75rem);
+  line-height: 1.06;
+}
+
+.subtitle {
+  margin: 0 0 2rem;
+  max-width: 38rem;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  line-height: 1.8;
+}
+
+.lang-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.lang-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+  padding: 1.1rem 1.15rem;
+  background: var(--surface-strong);
+  border: 1px solid rgba(18, 49, 79, 0.1);
+  border-radius: 18px;
+  color: var(--brand);
+  text-decoration: none;
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.lang-btn:hover,
+.lang-btn:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(18, 49, 79, 0.22);
+  box-shadow: 0 16px 34px rgba(18, 49, 79, 0.1);
+}
+
+.lang-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.label {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.info-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.info-card h2 {
+  margin: 0 0 1rem;
+  color: var(--brand);
+  font-size: 1.3rem;
+}
+
+.info-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.info-card p + p {
+  margin-top: 1rem;
+}
+
+@media (max-width: 960px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(1120px, calc(100% - 1.25rem));
+    padding: 18px 0 32px;
+  }
+
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .lang-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .lang-btn {
+    min-height: 0;
+    gap: 0.5rem;
+  }
+
+  .hero-card,
+  .info-card {
+    border-radius: 20px;
+  }
+
+  .hero-card {
+    padding: 1.3rem;
+  }
+
+  .info-card {
+    padding: 1.2rem;
+  }
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <h2>Welcome to Laexis Advisory</h2>
-  <p class="subtitle">Please select your language / 请选择语言 / 言語を選択してください</p>
+  <div class="page-shell">
+    <div class="topbar">
+      <a class="brand" href="/">Laexis Advisory</a>
+      <a class="back" href="/">← Back to Home</a>
+    </div>
 
-  <div class="lang-buttons">
-    <a class="lang-btn" href="/Services/CN">
-      中文
-      <span class="label">Chinese</span>
-    </a>
-    <a class="lang-btn" href="/Services/EN">
-      English
-      <span class="label">English</span>
-    </a>
-    <a class="lang-btn" href="/Services/JP">
-      日本語
-      <span class="label">Japanese</span>
-    </a>
+    <section class="hero">
+      <div class="hero-card">
+        <span class="eyebrow">Select Language</span>
+        <h1>Welcome to Laexis Advisory</h1>
+        <p class="subtitle">
+          Please choose your preferred language to explore our services in
+          China, English, or Japanese.
+        </p>
+
+        <div class="lang-buttons">
+          <a class="lang-btn" href="/Services/CN">
+            <span class="lang-title">中文</span>
+            <span class="label">Chinese</span>
+          </a>
+
+          <a class="lang-btn" href="/Services/EN">
+            <span class="lang-title">English</span>
+            <span class="label">English</span>
+          </a>
+
+          <a class="lang-btn" href="/Services/JP">
+            <span class="lang-title">日本語</span>
+            <span class="label">Japanese</span>
+          </a>
+        </div>
+      </div>
+
+      <aside class="info-card">
+        <div>
+          <h2>What you will find</h2>
+          <p>
+            Practical guidance on market entry, corporate setup, compliance,
+            contracts, and cross-border operations in Japan.
+          </p>
+          <p>
+            Each language section is structured to make it easy to navigate on
+            both desktop and mobile devices.
+          </p>
+        </div>
+      </aside>
+    </section>
   </div>
-
-  <a class="back" href="/">← Back</a>
-</div>
 </body>
 </html>
