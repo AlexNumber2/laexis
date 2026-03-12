@@ -127,6 +127,48 @@ section + section {
   font-size: clamp(1rem, 1.6vw, 1.08rem);
 }
 
+.share-block {
+  margin-top: 1.5rem;
+}
+
+.share-label {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.share-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 108px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--heading);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.share-button:hover,
+.share-button:focus-visible {
+  background: rgba(125, 211, 199, 0.1);
+  border-color: rgba(125, 211, 199, 0.45);
+  transform: translateY(-1px);
+}
+
 .insight-footer {
   margin-top: 3rem;
   padding-top: 1.5rem;
@@ -191,6 +233,16 @@ section + section {
         article highlights ten common compliance mistakes and outlines
         practical steps for building an effective compliance framework.
       </p>
+
+      <div class="share-block">
+        <p class="share-label">Share this article</p>
+        <div class="share-links">
+          <a class="share-button" href="https://www.linkedin.com/sharing/share-offsite/?url=https://laexisadvisory.com/insights/Article/article1_FreelanceAct.html" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="share-button" href="https://social-plugins.line.me/lineit/share?url=https://laexisadvisory.com/insights/Article/article1_FreelanceAct.html" target="_blank" rel="noopener noreferrer">LINE</a>
+          <a class="share-button" href="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://laexisadvisory.com/insights/Article/article1_FreelanceAct.html" target="_blank" rel="noopener noreferrer">WeChat</a>
+          <a class="share-button" href="mailto:?subject=10%20Compliance%20Mistakes%20Companies%20Make%20Under%20Japan%27s%20Freelance%20Act&body=I%20thought%20you%20might%20find%20this%20article%20useful:%20https://laexisadvisory.com/insights/Article/article1_FreelanceAct.html">Email</a>
+        </div>
+      </div>
     </header>
 
     <section>
