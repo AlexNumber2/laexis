@@ -274,7 +274,7 @@ td {
       </form>
 
       <p class="hint">
-        结果来源于对指定律所网站的限定域名检索。请尽量输入日语关键词以获得更好的结果。
+        当前为混合模式：优先显示可稳定匹配的结果，并为暂不适合自动抓取的律所提供官网入口。
       </p>
     </section>
 
@@ -352,7 +352,7 @@ async function search(keyword) {
     }
 
     renderRows(data.results || []);
-    statusText.textContent = `找到 ${data.results.length} 条结果。`;
+    statusText.textContent = `找到 ${data.results.length} 条结果。部分行为自动匹配结果，部分为官网入口。`;
   } catch (error) {
     statusText.textContent = "搜索未完成。";
     resultsBody.innerHTML = '<tr><td class="empty" colspan="4">暂无结果。</td></tr>';
