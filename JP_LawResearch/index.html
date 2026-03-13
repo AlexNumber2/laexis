@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JP Law Research Tool | Laexis Advisory</title>
+<style>
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-strong: #ffffff;
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --brand-soft: #e7efe8;
+  --accent: #b88746;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 26px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Yu Gothic", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+  min-height: 100vh;
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.brand {
+  color: var(--brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.hero,
+.search-card,
+.results-container {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.hero {
+  padding: clamp(1.5rem, 3vw, 2.6rem);
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(18, 49, 79, 0.08);
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 0.9rem;
+  color: var(--brand);
+  font-size: clamp(2rem, 4.8vw, 3.8rem);
+  line-height: 1.08;
+}
+
+.lead {
+  margin: 0;
+  max-width: 52rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.search-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 135, 70, 0.15);
+}
+
+.search-button {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: white;
+  background: var(--brand);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.search-button:hover {
+  background: #194165;
+  transform: translateY(-2px);
+}
+
+.search-button:disabled {
+  background: var(--muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.results-container {
+  display: none;
+  padding: 2rem;
+  gap: 1.5rem;
+  flex-direction: column;
+}
+
+.results-container.active {
+  display: flex;
+}
+
+.result-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.result-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-jp { color: var(--brand); }
+.icon-en { color: #2563eb; }
+.icon-zh { color: #dc2626; }
+
+.copy-button {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.copy-button:hover {
+  background: var(--bg);
+  color: var(--brand);
+}
+
+.result-content {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.jlt-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--brand-soft);
+  color: var(--brand);
+  text-decoration: none;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  width: fit-content;
+  transition: background 0.2s;
+}
+
+.jlt-link:hover {
+  background: #d8e5db;
+}
+
+.ai-tools-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.ai-header {
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: var(--brand);
+  font-size: 1.15rem;
+}
+
+.ai-desc {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.ai-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: opacity 0.2s, transform 0.2s;
+  border: none;
+}
+
+.ai-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.bg-chatgpt { background: #10a37f; }
+.bg-gemini { background: #1a73e8; }
+.bg-claude { background: #d97757; }
+.bg-perplexity { background: #22b8cd; }
+.bg-deepseek { background: #4d6bfe; }
+.bg-doubao { background: #ff004f; }
+
+.loading-overlay {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+  color: var(--brand);
+  font-weight: 600;
+}
+.loading-overlay.active { display: block; }
+
+.debug-logs {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border: 1px dashed #ccc;
+  border-radius: 12px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  color: #333;
+}
+
+@media (max-width: 720px) {
+  .search-group {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <a class="brand" href="../index.html">Laexis Advisory</a>
+      <a class="back-link" href="../index.html">← Back to Home</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">JP Law Research Tool</span>
+      <h1>日本法条検索ツール</h1>
+      <p class="lead">
+        法令名と条文番号を入力してください（例：民法333条、会社法 第100条）。即座に原文を抽出し、翻訳やAIでの解析に繋げます。
+      </p>
+    </section>
+
+    <section class="search-card">
+      <form id="searchForm" class="search-group" onsubmit="event.preventDefault(); handleSearch();">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="例：民法333条、刑法第199条..." 
+          required 
+          autocomplete="off">
+        <button type="submit" id="searchBtn" class="search-button">検索</button>
+      </form>
+      
+      <div id="loadingState" class="loading-overlay">検索中... e-Gov APIからデータを取得しています</div>
+      <div id="debugOutput" class="debug-logs" style="display:none;"></div>
+    </section>
+
+    <section id="resultsContainer" class="results-container">
+      <!-- Japanese Original -->
+      <div class="result-card">
+        <div class="result-header">
+          <h3 class="result-title"><span class="icon-jp">📜</span> 日文原文 <span id="lawTitleDisplay" style="font-size: 0.9rem; font-weight: normal; color: var(--muted); margin-left: 0.5rem;"></span></h3>
+          <button class="copy-button" onclick="copyText('jpContent', this)">📋 Copy</button>
+        </div>
+        <div id="jpContent" class="result-content"></div>
+      </div>
+
+      <!-- English Translation -->
+      <div class="result-card">
+        <div class="result-header">
+          <h3 class="result-title"><span class="icon-en">🌐</span> English Translation</h3>
+        </div>
+        <div class="result-content" style="display: flex; flex-direction: column; gap: 1rem;">
+          <a id="jltLink" href="#" target="_blank" class="jlt-link">📖 查看官方英译 (JLT)</a>
+          <span style="font-size: 0.9rem; color: var(--muted);">※ 如 JLT 无此法令译文，请使用下方 AI 按钮获取翻译</span>
+        </div>
+      </div>
+
+      <!-- Chinese Translation -->
+      <div class="result-card">
+        <div class="result-header">
+          <h3 class="result-title"><span class="icon-zh">🀄</span> 中文翻译</h3>
+        </div>
+        <div class="result-content" style="color: var(--muted);">
+          （无官方中译记录，请使用下方 AI 按钮获取翻译）
+        </div>
+      </div>
+
+      <!-- AI Buttons -->
+      <div class="ai-tools-card">
+        <h3 class="ai-header">🤖 AI 翻訳・解説・分析</h3>
+        <p class="ai-desc">法条の翻訳、意味の解説、適用シーンなどについて自由に質問できます。</p>
+        <div class="button-grid" id="aiButtonsContainer">
+          <!-- Buttons appended via JS -->
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // --- Step 1: Input Parsing Logic ---
+    
+    // Convert Kanji numerals to Arabic numerals
+    function kanjiToArabic(str) {
+      if (!str) return '';
+      
+      const kanjiMap = {
+        '〇': 0, '一': 1, '二': 2, '三': 3, '四': 4,
+        '五': 5, '六': 6, '七': 7, '八': 8, '九': 9
+      };
+      
+      // If it only contains standard arabic numbers, return early
+      if (/^[0-9]+$/.test(str)) {
+        return str;
+      }
+      
+      // Complex Kanji number parser (e.g., 七百九 -> 709)
+      if (/[一二三四五六七八九十百千万]/.test(str)) {
+        let result = 0;
+        let temp = 0;
+        let lastUnit = 1;
+        
+        for (let i = 0; i < str.length; i++) {
+          const char = str[i];
+          
+          if (kanjiMap[char] !== undefined) {
+             temp = kanjiMap[char];
+          } else if (char === '十') {
+             result += (temp === 0 ? 1 : temp) * 10;
+             temp = 0;
+          } else if (char === '百') {
+             result += (temp === 0 ? 1 : temp) * 100;
+             temp = 0;
+          } else if (char === '千') {
+             result += (temp === 0 ? 1 : temp) * 1000;
+             temp = 0;
+          } else if (char === '万') {
+             result += (result + (temp === 0 ? 1 : temp)) * 10000;
+             result = 0;
+             temp = 0;
+          }
+        }
+        result += temp;
+        return result.toString();
+      }
+      
+      return str; 
+    }
+
+    // Convert full-width characters (like numbers) to half-width
+    function toHalfWidth(str) {
+      return str.replace(/[！-～]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+      });
+    }
+
+    // Main parser function for "LawName ArticleNum"
+    function parseLawInput(input) {
+      // 1. Normalize spaces & full-width -> half-width mapping for numbers and spaces
+      let normalized = input.replace(/[　]/g, ' ') // Convert full-width space to half-width
+                            .replace(/[！-～]/g, function(s) {
+                               return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+                            })
+                            .replace(/\s+/g, ' ') // Condense multiple spaces into one
+                            .trim();
+      
+      // 2. Regex to match Law Name and Article Number
+      // Matches everything up to the last space or "第", then grabs the numbers
+      const regex = /^(.+?)(?:\s+|第)?([0-9一二三四五六七八九十百千万]+)[\s]*条?$/;
+      
+      const match = normalized.match(regex);
+      
+      if (!match) {
+        return {
+          success: false,
+          error: "形式を解析できませんでした。「民法333条」や「刑法 34条」のように入力してください。"
+        };
+      }
+      
+      let rawLawName = match[1].trim();
+      // If the user typed "刑法 第34条" without space, rawLawName might be "刑法第". Strip trailing "第".
+      rawLawName = rawLawName.replace(/第$/, '').trim(); 
+      
+      const rawNumber = match[2];
+      const parsedNumber = kanjiToArabic(rawNumber);
+      
+      return {
+        success: true,
+        originalInput: input,
+        lawName: rawLawName,
+        articleNumber: parsedNumber
+      };
+    }
+
+    // --- Step 2 & 3: e-Gov API Integration & Extraction ---
+
+    const E_GOV_API_BASE = 'https://laws.e-gov.go.jp/api/2';
+    let currentClauseText = ""; // Store for AI buttons
+
+    // Recursively extract text from children
+    function extractTextFromChildren(obj) {
+      if (!obj) return "";
+      let text = "";
+      
+      // If it's an array of children, iterate
+      if (Array.isArray(obj)) {
+        for (const child of obj) {
+          if (typeof child === "string") {
+            text += child;
+          } else if (typeof child === "object" && child !== null) {
+            text += extractTextFromChildren(child.children || child);
+          }
+        }
+      } 
+      // If it's a single node object
+      else if (typeof obj === "object" && obj !== null) {
+        if (obj.children) {
+             text += extractTextFromChildren(obj.children);
+        }
+      }
+      return text;
+    }
+
+    // Recursively find the target Article node
+    function findArticleNode(elm, targetNum) {
+      if (elm.tag === "Article" && elm.attr && elm.attr.Num === targetNum.toString()) {
+        return elm;
+      }
+      if (elm.children && Array.isArray(elm.children)) {
+        for (const child of elm.children) {
+          if (typeof child === "object" && child !== null) {
+            const result = findArticleNode(child, targetNum);
+            if (result) return result;
+          }
+        }
+      }
+      return null;
+    }
+
+    // Cleanly flatten an article node into readable format
+    function formatArticleToText(articleNode) {
+      if (!articleNode || !articleNode.children) return "";
+      
+      let formattedText = "";
+      let articleTitle = `第${articleNode.attr.Num}条`;
+
+      // Check for caption (Title of the article)
+      const captionNode = articleNode.children.find(child => typeof child === "object" && child.tag === "ArticleCaption");
+      if (captionNode) {
+         articleTitle += ` （${extractTextFromChildren(captionNode.children)}）`;
+      }
+      
+      formattedText += articleTitle + "\n";
+      
+      // Filter out caption and extract text for all paragraphs/items inside the article
+      const contentNodes = articleNode.children.filter(child => typeof child === "object" && child.tag !== "ArticleCaption");
+      for (const node of contentNodes) {
+          let text = extractTextFromChildren(node.children);
+          // Only append if it actually has text, removing unnecessary empty lines
+          if (text.trim()) {
+            // Very hacky spacing fix for Paragraph Num / Item Num etc
+            text = text.replace(/^[0-9]+/, match => match + " ");
+            formattedText += text.trim() + "\n";
+          }
+      }
+
+      return formattedText.trim();
+    }
+
+    // 1. Search Law ID by Keyword
+    async function fetchLawIdByKeyword(lawName) {
+      const url = `${E_GOV_API_BASE}/keyword?keyword=${encodeURIComponent(lawName)}`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        // Ensure successful response & has items
+        if (!data.keyword_response || !data.keyword_response.law_info || data.keyword_response.law_info.length === 0) {
+          return null;
+        }
+
+        const laws = data.keyword_response.law_info;
+        
+        // Attempt exact match first
+        let matchedLaw = laws.find(l => l.law_title === lawName);
+        if (!matchedLaw) matchedLaw = laws[0]; // fallback best match
+
+        return {
+          lawId: matchedLaw.law_id,
+          fullTitle: matchedLaw.law_title
+        };
+      } catch (err) {
+        console.error("Keyword API Error:", err);
+        return null;
+      }
+    }
+
+    // 2. Fetch Law Data (JSON format)
+    async function fetchLawData(lawId) {
+      // Use sessionStorage cache to prevent repeated 5MB JSON downloads
+      const cacheKey = `law_${lawId}`;
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+
+      const url = `${E_GOV_API_BASE}/law_data/${lawId}?response_format=2`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        
+        if (data.law_data_response && data.law_data_response.elm) {
+          // Store only the tree in cache
+          try {
+             sessionStorage.setItem(cacheKey, JSON.stringify(data.law_data_response.elm));
+          } catch(e) {
+             console.warn("Could not write to sessionStorage (file too large), skipping cache.");
+          }
+          return data.law_data_response.elm;
+        }
+        return null;
+      } catch (err) {
+        console.error("Law Data API Error:", err);
+        return null;
+      }
+    }
+
+    // --- AI Generator Options ---
+    const AI_PLATFORMS = [
+      { id: 'chatgpt', name: 'ChatGPT', class: 'bg-chatgpt', url: 'https://chatgpt.com/?q=' },
+      { id: 'gemini', name: 'Gemini', class: 'bg-gemini', url: 'https://gemini.google.com/app?q=' },
+      { id: 'claude', name: 'Claude', class: 'bg-claude', url: 'https://claude.ai/new?q=' },
+      { id: 'perplexity', name: 'Perplexity', class: 'bg-perplexity', url: 'https://www.perplexity.ai/search?q=' },
+      { id: 'deepseek', name: 'Deepseek', class: 'bg-deepseek', url: 'https://chat.deepseek.com/?q=' },
+      { id: 'doubao', name: '豆包', class: 'bg-doubao', url: 'https://www.doubao.com/chat/?q=' }
+    ];
+
+    function generateAiPrompt(contextText) {
+      return encodeURIComponent(
+`以下は日本の法律条文です。
+Please provide:
+1. English translation
+2. 中文翻译
+3. Brief explanation of the meaning and application
+
+${contextText}`
+      );
+    }
+
+    function renderAiButtons(contextText) {
+      const container = document.getElementById('aiButtonsContainer');
+      container.innerHTML = '';
+      
+      const prompt = generateAiPrompt(contextText);
+      
+      AI_PLATFORMS.forEach(platform => {
+        const a = document.createElement('a');
+        a.href = platform.url + prompt;
+        a.target = "_blank";
+        a.className = `ai-btn ${platform.class}`;
+        a.textContent = platform.name;
+        container.appendChild(a);
+      });
+    }
+
+    // --- State Management ---
+    function setUIState(isLoading) {
+      const btn = document.getElementById('searchBtn');
+      const overlay = document.getElementById('loadingState');
+      const results = document.getElementById('resultsContainer');
+      const debug = document.getElementById('debugOutput');
+      
+      btn.disabled = isLoading;
+      
+      if (isLoading) {
+        overlay.classList.add('active');
+        results.classList.remove('active');
+        debug.style.display = 'none';
+      } else {
+        overlay.classList.remove('active');
+      }
+    }
+
+    function showError(msg) {
+      setUIState(false);
+      const debug = document.getElementById('debugOutput');
+      debug.style.display = 'block';
+      debug.innerHTML = `❌ ${msg}`;
+    }
+
+    // --- Main Search Execution ---
+    async function handleSearch() {
+      const inputEl = document.getElementById('searchInput');
+      const input = inputEl.value;
+      
+      if (!input) return;
+      
+      // Parse Input
+      const parseResult = parseLawInput(input);
+      if (!parseResult.success) {
+         showError(parseResult.error);
+         return;
+      }
+
+      setUIState(true);
+      
+      try {
+        // Step 2.1: Find Law ID
+        const lawInfo = await fetchLawIdByKeyword(parseResult.lawName);
+        if (!lawInfo) {
+          showError(`「${parseResult.lawName}」という法令が見つかりませんでした。正式名称で入力してください。`);
+          return;
+        }
+
+        // Step 2.2: Fetch Law Data Tree
+        const elmTree = await fetchLawData(lawInfo.lawId);
+        if (!elmTree) {
+          showError(`法令データ（${lawInfo.fullTitle}）の取得に失敗しました。`);
+          return;
+        }
+
+        // Step 3: Find Article in Tree
+        const articleNode = findArticleNode(elmTree, parseResult.articleNumber);
+        if (!articleNode) {
+          showError(`「${lawInfo.fullTitle}」の中に第${parseResult.articleNumber}条が見つかりませんでした。`);
+          return;
+        }
+
+        // Render to UI
+        const clauseText = formatArticleToText(articleNode);
+        currentClauseText = `【${lawInfo.fullTitle}】\n${clauseText}`;
+        
+        document.getElementById('lawTitleDisplay').textContent = `— ${lawInfo.fullTitle}`;
+        document.getElementById('jpContent').textContent = clauseText;
+
+        // Render JLT Link
+        const jltLink = document.getElementById('jltLink');
+        jltLink.href = `https://www.japaneselawtranslation.go.jp/en/laws/?re=01&law_name=${encodeURIComponent(parseResult.lawName)}`;
+
+        // Render GenAI Links
+        renderAiButtons(currentClauseText);
+
+        setUIState(false);
+        document.getElementById('resultsContainer').classList.add('active');
+      } catch (err) {
+         console.error(err);
+         showError("予期せぬエラーが発生しました。コンソールを確認してください。");
+      }
+    }
+
+    // --- Copy Tool ---
+    function copyText(elementId, btnElement) {
+       const text = document.getElementById(elementId).textContent;
+       navigator.clipboard.writeText(text).then(() => {
+         const originalText = btnElement.innerHTML;
+         btnElement.innerHTML = "✓ Copied!";
+         btnElement.style.color = "var(--brand)";
+         setTimeout(() => {
+           btnElement.innerHTML = originalText;
+           btnElement.style.color = "";
+         }, 2000);
+       });
+    }
+  </script>
+</body>
+</html>
