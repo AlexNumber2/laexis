@@ -492,7 +492,9 @@ h1 {
       };
     }
 
-    // --- Step 2 & 3: e-Gov API Integration & Extraction ---
+    // --- Step 2 & 3: e-Gov API v2 Integration (CORRECTED) ---
+    // Key fix: Use GET /laws?law_title= instead of /keyword for name search
+    // Key fix: Use elm=Article_{N} to fetch only the target article
 
     const E_GOV_API_BASE = 'https://laws.e-gov.go.jp/api/2';
     let currentClauseText = ""; // Store for AI buttons
@@ -500,29 +502,24 @@ h1 {
     // Recursively extract text from children
     function extractTextFromChildren(obj) {
       if (!obj) return "";
+      if (typeof obj === "string") return obj;
       let text = "";
       
-      // If it's an array of children, iterate
       if (Array.isArray(obj)) {
         for (const child of obj) {
-          if (typeof child === "string") {
-            text += child;
-          } else if (typeof child === "object" && child !== null) {
-            text += extractTextFromChildren(child.children || child);
-          }
+          text += extractTextFromChildren(child);
         }
-      } 
-      // If it's a single node object
-      else if (typeof obj === "object" && obj !== null) {
+      } else if (typeof obj === "object" && obj !== null) {
         if (obj.children) {
-             text += extractTextFromChildren(obj.children);
+          text += extractTextFromChildren(obj.children);
         }
       }
       return text;
     }
 
-    // Recursively find the target Article node
+    // Recursively find the target Article node in the elm tree
     function findArticleNode(elm, targetNum) {
+      if (!elm || typeof elm !== "object") return null;
       if (elm.tag === "Article" && elm.attr && elm.attr.Num === targetNum.toString()) {
         return elm;
       }
@@ -544,7 +541,7 @@ h1 {
       let formattedText = "";
       let articleTitle = `第${articleNode.attr.Num}条`;
 
-      // Check for caption (Title of the article)
+      // Check for ArticleCaption (e.g. "（刑の言渡し）")
       const captionNode = articleNode.children.find(child => typeof child === "object" && child.tag === "ArticleCaption");
       if (captionNode) {
          articleTitle += ` （${extractTextFromChildren(captionNode.children)}）`;
@@ -552,13 +549,13 @@ h1 {
       
       formattedText += articleTitle + "\n";
       
-      // Filter out caption and extract text for all paragraphs/items inside the article
-      const contentNodes = articleNode.children.filter(child => typeof child === "object" && child.tag !== "ArticleCaption");
+      // Extract text from Paragraph, Item, etc. (skip ArticleCaption and ArticleTitle)
+      const contentNodes = articleNode.children.filter(child => 
+        typeof child === "object" && child.tag !== "ArticleCaption" && child.tag !== "ArticleTitle"
+      );
       for (const node of contentNodes) {
           let text = extractTextFromChildren(node.children);
-          // Only append if it actually has text, removing unnecessary empty lines
           if (text.trim()) {
-            // Very hacky spacing fix for Paragraph Num / Item Num etc
             text = text.replace(/^[0-9]+/, match => match + " ");
             formattedText += text.trim() + "\n";
           }
@@ -567,56 +564,72 @@ h1 {
       return formattedText.trim();
     }
 
-    // 1. Search Law ID by Keyword
-    async function fetchLawIdByKeyword(lawName) {
-      const url = `${E_GOV_API_BASE}/keyword?keyword=${encodeURIComponent(lawName)}`;
+    // ====================================================
+    // API Step 1: Search law by title using GET /laws
+    // This is the CORRECT endpoint for searching by law name
+    // (NOT /keyword, which searches full text)
+    // ====================================================
+    async function fetchLawByTitle(lawName) {
+      const url = `${E_GOV_API_BASE}/laws?law_title=${encodeURIComponent(lawName)}&limit=10&response_format=json`;
       try {
         const response = await fetch(url);
+        if (!response.ok) {
+          console.error("Laws API HTTP Error:", response.status);
+          return null;
+        }
         const data = await response.json();
         
-        // Ensure successful response & has items
-        if (!data.keyword_response || !data.keyword_response.law_info || data.keyword_response.law_info.length === 0) {
+        // /laws returns { total_count, count, laws: [...] }
+        if (!data.laws || data.laws.length === 0) {
           return null;
         }
 
-        const laws = data.keyword_response.law_info;
+        const laws = data.laws;
         
-        // Attempt exact match first
-        let matchedLaw = laws.find(l => l.law_title === lawName);
-        if (!matchedLaw) matchedLaw = laws[0]; // fallback best match
+        // 1. Exact match on revision_info.law_title
+        let matched = laws.find(l => l.revision_info && l.revision_info.law_title === lawName);
+        
+        // 2. Exact match on abbrev (e.g. 慣信法 for 担保付社債信託法)
+        if (!matched) {
+          matched = laws.find(l => l.revision_info && l.revision_info.abbrev && l.revision_info.abbrev.split(',').includes(lawName));
+        }
+        
+        // 3. Prefix match (e.g. 刑法 matching 刑法施行法)
+        if (!matched) {
+          matched = laws.find(l => l.revision_info && l.revision_info.law_title.startsWith(lawName));
+        }
+        
+        // 4. Fallback: first result
+        if (!matched) matched = laws[0];
 
         return {
-          lawId: matchedLaw.law_id,
-          fullTitle: matchedLaw.law_title
+          lawId: matched.law_info.law_id,
+          fullTitle: matched.revision_info.law_title
         };
       } catch (err) {
-        console.error("Keyword API Error:", err);
+        console.error("Laws API Error:", err);
         return null;
       }
     }
 
-    // 2. Fetch Law Data (JSON format)
-    async function fetchLawData(lawId) {
-      // Use sessionStorage cache to prevent repeated 5MB JSON downloads
-      const cacheKey = `law_${lawId}`;
-      const cached = sessionStorage.getItem(cacheKey);
-      if (cached) {
-        return JSON.parse(cached);
-      }
-
-      const url = `${E_GOV_API_BASE}/law_data/${lawId}?response_format=2`;
+    // ====================================================
+    // API Step 2: Fetch specific article using GET /law_data
+    // with elm=Article_{N} so only the target article is returned
+    // ====================================================
+    async function fetchArticle(lawId, articleNum) {
+      // Use elm parameter to request only the specific article
+      const url = `${E_GOV_API_BASE}/law_data/${lawId}?response_format=json&elm=Article_${articleNum}`;
       try {
         const response = await fetch(url);
+        if (!response.ok) {
+          console.error("Law Data API HTTP Error:", response.status);
+          return null;
+        }
         const data = await response.json();
         
-        if (data.law_data_response && data.law_data_response.elm) {
-          // Store only the tree in cache
-          try {
-             sessionStorage.setItem(cacheKey, JSON.stringify(data.law_data_response.elm));
-          } catch(e) {
-             console.warn("Could not write to sessionStorage (file too large), skipping cache.");
-          }
-          return data.law_data_response.elm;
+        // Response: { law_info, revision_info, law_full_text: { tag: "Law", children: [...] } }
+        if (data.law_full_text) {
+          return data.law_full_text;
         }
         return null;
       } catch (err) {
@@ -688,14 +701,14 @@ ${contextText}`
       debug.innerHTML = `❌ ${msg}`;
     }
 
-    // --- Main Search Execution ---
+    // --- Main Search Execution (v2) ---
     async function handleSearch() {
       const inputEl = document.getElementById('searchInput');
       const input = inputEl.value;
       
       if (!input) return;
       
-      // Parse Input
+      // Step 1: Parse Input
       const parseResult = parseLawInput(input);
       if (!parseResult.success) {
          showError(parseResult.error);
@@ -705,28 +718,28 @@ ${contextText}`
       setUIState(true);
       
       try {
-        // Step 2.1: Find Law ID
-        const lawInfo = await fetchLawIdByKeyword(parseResult.lawName);
+        // Step 2: Find Law by Title (using GET /laws?law_title=)
+        const lawInfo = await fetchLawByTitle(parseResult.lawName);
         if (!lawInfo) {
           showError(`「${parseResult.lawName}」という法令が見つかりませんでした。正式名称で入力してください。`);
           return;
         }
 
-        // Step 2.2: Fetch Law Data Tree
-        const elmTree = await fetchLawData(lawInfo.lawId);
-        if (!elmTree) {
+        // Step 3: Fetch specific Article (using elm=Article_{N})
+        const lawFullText = await fetchArticle(lawInfo.lawId, parseResult.articleNumber);
+        if (!lawFullText) {
           showError(`法令データ（${lawInfo.fullTitle}）の取得に失敗しました。`);
           return;
         }
 
-        // Step 3: Find Article in Tree
-        const articleNode = findArticleNode(elmTree, parseResult.articleNumber);
+        // Step 4: Find Article node in the returned tree
+        const articleNode = findArticleNode(lawFullText, parseResult.articleNumber);
         if (!articleNode) {
           showError(`「${lawInfo.fullTitle}」の中に第${parseResult.articleNumber}条が見つかりませんでした。`);
           return;
         }
 
-        // Render to UI
+        // Step 5: Render to UI
         const clauseText = formatArticleToText(articleNode);
         currentClauseText = `【${lawInfo.fullTitle}】\n${clauseText}`;
         
