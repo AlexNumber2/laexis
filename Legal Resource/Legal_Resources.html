@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal Resources | Laexis Advisory</title>
+<style>
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.94);
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --accent: #b88746;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 28px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  width: min(1140px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.brand {
+  color: var(--brand);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.brand a:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  color: var(--muted);
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--brand);
+}
+
+.hero-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(2rem, 4vw, 4rem);
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(18, 49, 79, 0.08);
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  color: var(--brand);
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+}
+
+.intro {
+  margin: 0 auto 3rem;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 36rem;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.5rem;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 2px solid var(--line);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.action-btn:hover {
+  border-color: var(--brand);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(18, 49, 79, 0.08);
+}
+
+.action-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.action-title {
+  color: var(--brand);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.action-desc {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    padding: 18px 0 32px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <div class="brand">Laexis Advisory</div>
+      <a href="../index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <div class="hero-card">
+      <span class="eyebrow">Tools & Services</span>
+      <h1>Legal Resources Hub</h1>
+      <p class="intro">
+        Select a destination below to proceed to our research tools or view our advisory services.
+      </p>
+
+      <div class="actions">
+        <!-- Button 1: To Legal News Info -->
+        <a href="Legal_News_Information/Legal_Information.html" class="action-btn">
+          <div class="action-icon">🏢</div>
+          <div class="action-title">Legal News Info</div>
+          <div class="action-desc">Explore our cross-border business coordination and commercial support services.</div>
+        </a>
+
+        <!-- Button 2: To JP Law Research Tool -->
+        <a href="JP_LawResearch/index.html" class="action-btn">
+          <div class="action-icon">📚</div>
+          <div class="action-title">JP Law Research Tool</div>
+          <div class="action-desc">Access our interactive tool to instantly search and translate Japanese legal clauses.</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

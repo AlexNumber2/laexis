@@ -167,6 +167,53 @@ h1 {
   display: flex;
 }
 
+.candidate-container {
+  display: none;
+  padding: 2rem;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.candidate-container.active {
+  display: flex;
+}
+
+.candidate-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.candidate-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem 1.3rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+}
+
+.candidate-item:hover {
+  border-color: rgba(18, 49, 79, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(18, 49, 79, 0.08);
+}
+
+.candidate-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--brand);
+}
+
+.candidate-meta {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
 .result-card {
   background: var(--surface-strong);
   border: 1px solid var(--line);
@@ -326,15 +373,15 @@ h1 {
 <body>
   <div class="page-shell">
     <div class="topbar">
-      <a class="brand" href="../index.html">Laexis Advisory</a>
-      <a class="back-link" href="../index.html">← Back to Home</a>
+      <a class="brand" href="../../index.html">Laexis Advisory</a>
+      <a class="back-link" href="../../index.html">← Back to Home</a>
     </div>
 
     <section class="hero">
       <span class="eyebrow">JP Law Research Tool</span>
       <h1>日本法条検索ツール</h1>
       <p class="lead">
-        法令名と条文番号を入力してください（例：民法333条、会社法 第100条）。即座に原文を抽出し、翻訳やAIでの解析に繋げます。
+        法令名と条文番号を入力してください（例：民法333条、会社法 52条の2）。即座に原文を抽出し、翻訳やAIでの解析に繋げます。
       </p>
     </section>
 
@@ -354,6 +401,18 @@ h1 {
       <div id="debugOutput" class="debug-logs" style="display:none;"></div>
     </section>
 
+    <section id="candidateContainer" class="results-container candidate-container">
+      <div class="result-card">
+        <div class="result-header">
+          <h3 class="result-title"><span class="icon-jp">📚</span> 法令候補</h3>
+        </div>
+        <div class="result-content" style="color: var(--muted); font-size: 0.95rem;">
+          入力したキーワードに一致する法令を一覧表示します。対象の法令を選択してください。
+        </div>
+        <div id="candidateList" class="candidate-list"></div>
+      </div>
+    </section>
+
     <section id="resultsContainer" class="results-container">
       <!-- Japanese Original -->
       <div class="result-card">
@@ -370,25 +429,14 @@ h1 {
           <h3 class="result-title"><span class="icon-en">🌐</span> English Translation</h3>
         </div>
         <div class="result-content" style="display: flex; flex-direction: column; gap: 1rem;">
-          <a id="jltLink" href="#" target="_blank" class="jlt-link">📖 查看官方英译 (JLT)</a>
-          <span style="font-size: 0.9rem; color: var(--muted);">※ 如 JLT 无此法令译文，请使用下方 AI 按钮获取翻译</span>
-        </div>
-      </div>
-
-      <!-- Chinese Translation -->
-      <div class="result-card">
-        <div class="result-header">
-          <h3 class="result-title"><span class="icon-zh">🀄</span> 中文翻译</h3>
-        </div>
-        <div class="result-content" style="color: var(--muted);">
-          （无官方中译记录，请使用下方 AI 按钮获取翻译）
+          <a id="jltLink" href="https://www.japaneselawtranslation.go.jp/en/laws/?re=01&law_name=%E4%BC%9A%E7%A4%BE%E6%B3%95" target="_blank" class="jlt-link">📖 Japanese government English version (JLT)</a>
         </div>
       </div>
 
       <!-- AI Buttons -->
       <div class="ai-tools-card">
-        <h3 class="ai-header">🤖 AI 翻訳・解説・分析</h3>
-        <p class="ai-desc">法条の翻訳、意味の解説、適用シーンなどについて自由に質問できます。</p>
+        <h3 class="ai-header">🤖 AI Translation & Explanation</h3>
+        <p class="ai-desc">English or Chinese translations, and English/Japanese/Chinese brief explanation, please choose the following AI to see the result.</p>
         <div class="button-grid" id="aiButtonsContainer">
           <!-- Buttons appended via JS -->
         </div>
@@ -498,6 +546,7 @@ h1 {
 
     const E_GOV_API_BASE = 'https://laws.e-gov.go.jp/api/2';
     let currentClauseText = ""; // Store for AI buttons
+    let currentSearchContext = null;
 
     // Recursively extract text from children
     function extractTextFromChildren(obj) {
@@ -645,16 +694,18 @@ h1 {
       { id: 'claude', name: 'Claude', class: 'bg-claude', url: 'https://claude.ai/new?q=' },
       { id: 'perplexity', name: 'Perplexity', class: 'bg-perplexity', url: 'https://www.perplexity.ai/search?q=' },
       { id: 'deepseek', name: 'Deepseek', class: 'bg-deepseek', url: 'https://chat.deepseek.com/?q=' },
-      { id: 'doubao', name: '豆包', class: 'bg-doubao', url: 'https://www.doubao.com/chat/?q=' }
+      { id: 'doubao', name: 'Doubao', class: 'bg-doubao', url: 'https://www.doubao.com/chat/?q=' }
     ];
 
     function generateAiPrompt(contextText) {
       return encodeURIComponent(
 `以下は日本の法律条文です。
 Please provide:
-1. English translation
-2. 中文翻译
-3. Brief explanation of the meaning and application
+1. Accurate English translation
+2. Accurate Chinese translation
+3. A brief explanation in English of the meaning and practical application
+4. 日本語での意味と実務上の適用の簡潔な説明
+5. 中文说明其含义及实务适用
 
 ${contextText}`
       );
@@ -758,6 +809,226 @@ ${contextText}`
       } catch (err) {
          console.error(err);
          showError("予期せぬエラーが発生しました。コンソールを確認してください。");
+      }
+    }
+
+    // --- Override Plan: Two-step law selection flow ---
+    function parseLawInput(input) {
+      const normalizedBase = input.replace(/\u3000/g, ' ').replace(/\s+/g, ' ').trim();
+      const normalized = normalizedBase
+        .replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+        .replace(/[Ａ-Ｚａ-ｚ]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+      const regex = /^(.+?)(?:\s+|第)?([0-9一二三四五六七八九十百千万]+)(?:条)?(?:の|_|-)?([0-9一二三四五六七八九十百千万]+)?\s*条?$/;
+      const match = normalized.match(regex);
+
+      if (!match) {
+        return {
+          success: false,
+          error: "请输入“法律名 + 条文编号”。例：公司法 22条、会社法 22条の2、会社法 22_2。"
+        };
+      }
+
+      let rawLawName = match[1].trim().replace(/第$/, '').trim();
+      const parsedNumber = kanjiToArabic(match[2]);
+      const parsedSubNumber = match[3] ? kanjiToArabic(match[3]) : "";
+
+      if (!rawLawName || !parsedNumber) {
+        return {
+          success: false,
+          error: "请输入完整关键词，例如：会社法 22条。"
+        };
+      }
+
+      const articleElm = parsedSubNumber ? `Article_${parsedNumber}_${parsedSubNumber}` : `Article_${parsedNumber}`;
+      const articleLabel = parsedSubNumber ? `第${parsedNumber}条の${parsedSubNumber}` : `第${parsedNumber}条`;
+
+      return {
+        success: true,
+        originalInput: input,
+        lawName: rawLawName,
+        articleNumber: parsedNumber,
+        articleSubNumber: parsedSubNumber,
+        articleElm,
+        articleLabel
+      };
+    }
+
+    function formatArticleToText(articleNode) {
+      if (!articleNode || !articleNode.children) return "";
+
+      let formattedText = "";
+      const rawNum = articleNode.attr?.Num ? String(articleNode.attr.Num) : "";
+      let articleTitle = "";
+      if (rawNum.includes("_")) {
+        const parts = rawNum.split("_");
+        articleTitle = `第${parts[0]}条の${parts.slice(1).join("の")}`;
+      } else {
+        articleTitle = `第${rawNum}条`;
+      }
+
+      const captionNode = articleNode.children.find(child => typeof child === "object" && child.tag === "ArticleCaption");
+      if (captionNode) {
+        articleTitle += ` （${extractTextFromChildren(captionNode.children)}）`;
+      }
+
+      formattedText += articleTitle + "\n";
+
+      const contentNodes = articleNode.children.filter(child =>
+        typeof child === "object" && child.tag !== "ArticleCaption" && child.tag !== "ArticleTitle"
+      );
+      for (const node of contentNodes) {
+        let text = extractTextFromChildren(node.children);
+        if (text.trim()) {
+          text = text.replace(/^[0-9]+/, match => match + " ");
+          formattedText += text.trim() + "\n";
+        }
+      }
+
+      return formattedText.trim();
+    }
+
+    async function fetchLawByTitle(lawName) {
+      const url = `${E_GOV_API_BASE}/laws?law_title=${encodeURIComponent(lawName)}&limit=30&response_format=json`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          console.error("Laws API HTTP Error:", response.status);
+          return null;
+        }
+        const data = await response.json();
+        if (!data.laws || data.laws.length === 0) return null;
+
+        return data.laws.map(entry => ({
+          lawId: entry.law_info?.law_id || "",
+          lawNum: entry.law_info?.law_num || "",
+          lawType: entry.law_info?.law_type || "",
+          fullTitle: entry.revision_info?.law_title || "",
+          abbrev: entry.revision_info?.abbrev || "",
+          status: entry.current_revision_info?.current_revision_status || entry.revision_info?.current_revision_status || ""
+        })).filter(item => item.lawId && item.fullTitle);
+      } catch (err) {
+        console.error("Laws API Error:", err);
+        return null;
+      }
+    }
+
+    async function fetchArticle(lawId, articleElm) {
+      const url = `${E_GOV_API_BASE}/law_data/${lawId}?response_format=json&elm=${articleElm}`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          console.error("Law Data API HTTP Error:", response.status);
+          return null;
+        }
+        const data = await response.json();
+        return data.law_full_text || null;
+      } catch (err) {
+        console.error("Law Data API Error:", err);
+        return null;
+      }
+    }
+
+    function setUIState(isLoading) {
+      const btn = document.getElementById('searchBtn');
+      const overlay = document.getElementById('loadingState');
+      const results = document.getElementById('resultsContainer');
+      const candidates = document.getElementById('candidateContainer');
+      const debug = document.getElementById('debugOutput');
+
+      btn.disabled = isLoading;
+      if (isLoading) {
+        overlay.classList.add('active');
+        results.classList.remove('active');
+        candidates.classList.remove('active');
+        debug.style.display = 'none';
+      } else {
+        overlay.classList.remove('active');
+      }
+    }
+
+    async function handleSearch() {
+      const inputEl = document.getElementById('searchInput');
+      const input = inputEl.value;
+      if (!input) return;
+
+      const parseResult = parseLawInput(input);
+      if (!parseResult.success) {
+        showError(parseResult.error);
+        return;
+      }
+
+      setUIState(true);
+      currentSearchContext = parseResult;
+
+      try {
+        const lawCandidates = await fetchLawByTitle(parseResult.lawName);
+        if (!lawCandidates) {
+          showError(`未找到与“${parseResult.lawName}”匹配的法令，请换更准确的关键词。`);
+          return;
+        }
+
+        renderLawCandidates(lawCandidates);
+        setUIState(false);
+        document.getElementById('candidateContainer').classList.add('active');
+      } catch (err) {
+        console.error(err);
+        showError("检索过程中发生错误，请稍后再试。");
+      }
+    }
+
+    function renderLawCandidates(candidates) {
+      const list = document.getElementById('candidateList');
+      list.innerHTML = '';
+      candidates.forEach(candidate => {
+        const button = document.createElement('button');
+        button.type = "button";
+        button.className = "candidate-item";
+        button.innerHTML = `
+          <div class="candidate-title">${candidate.fullTitle}</div>
+          <div class="candidate-meta">${candidate.lawNum || ""}${candidate.abbrev ? " ・略称: " + candidate.abbrev : ""}</div>
+        `;
+        button.addEventListener('click', () => handleLawSelect(candidate));
+        list.appendChild(button);
+      });
+    }
+
+    async function handleLawSelect(lawInfo) {
+      if (!currentSearchContext) return;
+      setUIState(true);
+      try {
+        const lawFullText = await fetchArticle(lawInfo.lawId, currentSearchContext.articleElm);
+        if (!lawFullText) {
+          showError(`未能取得“${lawInfo.fullTitle}”的条文内容。`);
+          return;
+        }
+
+        const targetNum = currentSearchContext.articleSubNumber
+          ? `${currentSearchContext.articleNumber}_${currentSearchContext.articleSubNumber}`
+          : currentSearchContext.articleNumber;
+        const articleNode = findArticleNode(lawFullText, targetNum);
+
+        if (!articleNode) {
+          showError(`在“${lawInfo.fullTitle}”中未找到${currentSearchContext.articleLabel}。`);
+          return;
+        }
+
+        const clauseText = formatArticleToText(articleNode);
+        currentClauseText = `「${lawInfo.fullTitle}」\n${clauseText}`;
+
+        document.getElementById('lawTitleDisplay').textContent = `・ ${lawInfo.fullTitle}`;
+        document.getElementById('jpContent').textContent = clauseText;
+
+        const jltLink = document.getElementById('jltLink');
+        jltLink.href = `https://www.japaneselawtranslation.go.jp/en/laws/?re=01&law_name=${encodeURIComponent(lawInfo.fullTitle)}`;
+
+        renderAiButtons(currentClauseText);
+
+        setUIState(false);
+        document.getElementById('resultsContainer').classList.add('active');
+        document.getElementById('candidateContainer').classList.remove('active');
+      } catch (err) {
+        console.error(err);
+        showError("检索过程中发生错误，请稍后再试。");
       }
     }
 
