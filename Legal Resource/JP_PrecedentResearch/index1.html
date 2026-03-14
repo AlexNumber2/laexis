@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Resources | Laexis Advisory</title>
+<title>JP Precedent Research | Laexis Advisory</title>
 <style>
 :root {
   --bg: #f3efe7;
@@ -60,10 +60,6 @@ a {
   gap: 0.8rem;
 }
 
-.brand a:hover {
-  text-decoration: underline;
-}
-
 .back-link {
   color: var(--muted);
   font-size: 0.95rem;
@@ -81,7 +77,7 @@ a {
   box-shadow: var(--shadow);
   padding: clamp(2rem, 4vw, 4rem);
   text-align: center;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
@@ -110,14 +106,14 @@ h1 {
   color: var(--muted);
   font-size: 1.1rem;
   line-height: 1.6;
-  max-width: 36rem;
+  max-width: 44rem;
 }
 
 .actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
-  max-width: 900px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -168,36 +164,36 @@ h1 {
   <div class="page-shell">
     <div class="topbar">
       <div class="brand">Laexis Advisory</div>
-      <a href="../index.html" class="back-link">← Back to Home</a>
+      <a href="../Legal_Resources.html" class="back-link">← Back to Resources</a>
     </div>
 
     <div class="hero-card">
-      <span class="eyebrow">Tools & Services</span>
-      <h1>Legal Resources Hub</h1>
+      <span class="eyebrow">Precedent Database</span>
+      <h1>JP Precedent Research</h1>
       <p class="intro">
-        Select a destination below to proceed to our research tools or view our advisory services.
+        Select a database below to search for Japanese court precedents, judgments, and legal research information.
       </p>
 
       <div class="actions">
-        <!-- Button 1: To Legal News Info -->
-        <a href="Legal_News_Information/Legal_Information.html" class="action-btn">
-          <div class="action-icon">🏢</div>
-          <div class="action-title">Legal News Info</div>
-          <div class="action-desc">Explore our cross-border business coordination and commercial support services.</div>
+        <!-- Button 1: 日本裁判所公式HP -->
+        <a href="https://www.courts.go.jp/hanrei/search1/index.html" class="action-btn" target="_blank">
+          <div class="action-icon">🏛️</div>
+          <div class="action-title">日本裁判所公式HP</div>
+          <div class="action-desc">裁判所ウェブサイト内の公式判例検索サービスです。</div>
         </a>
 
-        <!-- Button 2: To JP Law Research Tool -->
-        <a href="JP_LawResearch/index.html" class="action-btn">
-          <div class="action-icon">📚</div>
-          <div class="action-title">JP Law Research Tool</div>
-          <div class="action-desc">Access our interactive tool to instantly search and translate Japanese legal clauses.</div>
+        <!-- Button 2: 裁判所判例Watch -->
+        <a href="https://kanz.jp/hanrei/" class="action-btn" target="_blank">
+          <div class="action-icon">🔍</div>
+          <div class="action-title">裁判所判例Watch</div>
+          <div class="action-desc">判例をより効率的に検索し、ウォッチできる外部データベースです。</div>
         </a>
 
-        <!-- Button 3: To JP Precedent Research -->
-        <a href="JP_PrecedentResearch/index1.html" class="action-btn">
-          <div class="action-icon">⚖️</div>
-          <div class="action-title">JP Precedent Research</div>
-          <div class="action-desc">Search Japanese court precedents and judgments from the official Hanrei database.</div>
+        <!-- Button 3: 日本国内判例を探す場合の情報源 -->
+        <a href="https://waseda-jp.libguides.com/research-navi/hanrei/jp" class="action-btn" target="_blank">
+          <div class="action-icon">📜</div>
+          <div class="action-title">判例を探す場合の情報源</div>
+          <div class="action-desc">日本国内の判例を調べるための包括的なリサーチガイドです。</div>
         </a>
       </div>
     </div>
