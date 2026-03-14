@@ -15,6 +15,11 @@ The frontend probes API base automatically:
 - on `*.laexis.com` it tries same-origin `/v1`, then `https://api.laexis.com/v1`
 - otherwise it tries `http://127.0.0.1:8000/v1`, `http://localhost:8000/v1`, then the hosted URLs
 
+Important:
+
+- the health probe only accepts a real JSON response with `{ "ok": true }`
+- if `www.laexis.com/v1/...` returns HTML instead of JSON, the frontend will now skip it and continue probing the next API candidate
+
 You can override the API base by setting `window.__API_BASE__` before loading `precedent.js`.
 
 ## Backend

@@ -171,7 +171,12 @@ async function resolveApiBase() {
   for (const candidate of API_CANDIDATES) {
     try {
       const response = await fetch(`${candidate}/health`, { method: "GET" });
-      if (response.ok) {
+      const contentType = response.headers.get("content-type") || "";
+      if (!response.ok || !contentType.includes("application/json")) {
+        continue;
+      }
+      const payload = await response.json();
+      if (payload && payload.ok === true) {
         state.apiBase = candidate;
         el("backendHint").textContent = candidate;
         return candidate;
@@ -189,18 +194,34 @@ async function resolveApiBase() {
 }
 
 async function fetchJson(path, options) {
-  const base = await resolveApiBase();
-  let response;
-  try {
-    response = await fetch(`${base}${path}`, options);
-  } catch (_networkError) {
-    throw new Error(`Cannot reach API at ${base}. Check backend status, Cloudflare routing, or CORS.`);
+  let lastError = null;
+  const candidates = state.apiBase ? [state.apiBase, ...API_CANDIDATES.filter((c) => c !== state.apiBase)] : API_CANDIDATES;
+
+  for (const base of candidates) {
+    try {
+      const response = await fetch(`${base}${path}`, options);
+      const contentType = response.headers.get("content-type") || "";
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `Request failed: ${response.status}`);
+      }
+
+      if (!contentType.includes("application/json")) {
+        throw new Error(`Non-JSON response from ${base}. This usually means the request hit a website route instead of the API.`);
+      }
+
+      const data = await response.json();
+      state.apiBase = base;
+      el("backendHint").textContent = base;
+      return data;
+    } catch (error) {
+      lastError = error;
+      state.apiBase = null;
+    }
   }
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `Request failed: ${response.status}`);
-  }
-  return response.json();
+
+  throw lastError || new Error("No working API endpoint was found.");
 }
 
 function renderResultItem(item) {
