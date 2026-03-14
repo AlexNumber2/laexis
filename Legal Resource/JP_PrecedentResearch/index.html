@@ -1,0 +1,711 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JP Precedent Research | Laexis Advisory</title>
+<meta name="description" content="Search Japanese court precedents and generate GenAI summaries." />
+<style>
+:root {
+  --bg: #f3efe7;
+  --surface: rgba(255, 255, 255, 0.94);
+  --surface-strong: #ffffff;
+  --text: #1f2a37;
+  --muted: #5f6875;
+  --brand: #12314f;
+  --brand-soft: #e7efe8;
+  --accent: #b88746;
+  --line: rgba(18, 49, 79, 0.12);
+  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+  --radius: 26px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Yu Gothic", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+  min-height: 100vh;
+}
+
+a { color: inherit; }
+
+.page-shell {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 28px 0 56px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.brand {
+  color: var(--brand);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.back-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.hero, .search-card, .results-container, .detail-container {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.hero { padding: clamp(1.5rem, 3vw, 2.6rem); }
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(18, 49, 79, 0.08);
+  color: var(--brand);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0 0 0.9rem;
+  color: var(--brand);
+  font-size: clamp(2rem, 4.8vw, 3.2rem);
+  line-height: 1.08;
+}
+
+.lead {
+  margin: 0;
+  max-width: 56rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.search-card {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0 0 1rem 0;
+}
+
+.tab {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  color: var(--brand);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.tab:hover { transform: translateY(-1px); border-color: rgba(18, 49, 79, 0.28); }
+.tab[aria-selected="true"] { background: rgba(18, 49, 79, 0.08); border-color: rgba(18, 49, 79, 0.28); }
+.tab[disabled] { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.search-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 1rem 1.5rem;
+  font-size: 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 135, 70, 0.15);
+}
+
+.search-button {
+  padding: 1rem 2.2rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: white;
+  background: var(--brand);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  white-space: nowrap;
+}
+
+.search-button:hover { background: #194165; transform: translateY(-2px); }
+.search-button:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
+
+.advanced {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.group-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--brand);
+  letter-spacing: 0.02em;
+}
+
+.group {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 20px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.group-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.toggle-link {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0;
+}
+
+.toggle-link:hover { color: var(--brand); text-decoration: underline; }
+
+.row-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label { color: var(--muted); font-size: 0.9rem; }
+
+.field input,
+.field select {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  outline: none;
+  font-size: 0.98rem;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(184, 135, 70, 0.12);
+}
+
+.radio-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 800;
+  color: var(--brand);
+}
+
+.radio input { transform: translateY(1px); }
+
+.form-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.btn-secondary {
+  padding: 1rem 2.2rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--brand);
+  background: transparent;
+  border: 1px solid rgba(18, 49, 79, 0.2);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-secondary:hover { background: rgba(18, 49, 79, 0.05); transform: translateY(-2px); }
+
+.loading-overlay {
+  display: none;
+  text-align: center;
+  padding: 1.25rem;
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.loading-overlay.active { display: block; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.results-container, .detail-container {
+  padding: 2rem;
+  display: none;
+  gap: 1.2rem;
+  flex-direction: column;
+}
+
+.results-container.active, .detail-container.active {
+  display: flex;
+}
+
+.result-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+.result-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  padding: 1.1rem 1.2rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.result-item:hover {
+  border-color: rgba(18, 49, 79, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(18, 49, 79, 0.08);
+}
+
+.result-title { font-weight: 700; color: var(--brand); }
+.result-meta { margin-top: 0.25rem; font-size: 0.92rem; color: var(--muted); line-height: 1.6; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.pill {
+  padding: 0.22rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(18, 49, 79, 0.08);
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.actions { display: flex; gap: 0.5rem; }
+.action-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.action-btn:hover { background: var(--bg); color: var(--brand); }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.2rem;
+}
+
+.card {
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.card h3 { margin: 0 0 0.8rem 0; color: var(--brand); }
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.precedent-text {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.ai-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: opacity 0.2s, transform 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.ai-btn:hover { opacity: 0.92; transform: translateY(-2px); }
+
+.bg-summary { background: var(--brand); }
+.bg-chatgpt { background: #10a37f; }
+.bg-gemini { background: #1a73e8; }
+.bg-claude { background: #d97757; }
+.bg-deepseek { background: #4d6bfe; }
+.bg-doubao { background: #ff004f; }
+
+.small-note { color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+
+@media (max-width: 980px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .row-4 { grid-template-columns: 1fr 1fr; }
+  .row-3 { grid-template-columns: 1fr; }
+  .row-2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .search-group { flex-direction: column; }
+  .result-item { grid-template-columns: 1fr; }
+  .actions { justify-content: flex-start; }
+  .row-4 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="topbar">
+      <a class="brand" href="../../index.html">Laexis Advisory</a>
+      <a class="back-link" href="../../index.html">Back to Home</a>
+    </div>
+
+    <section class="hero">
+      <span class="eyebrow">JP Precedent Research</span>
+      <h1>日本判例检索与 GenAI 摘要</h1>
+      <p class="lead">按日本法院判例检索站的检索方式查询判例。选中判例后，点击 AI 按钮生成结构化摘要（判决时间、案件事实、法官分析、最终判决）。</p>
+    </section>
+
+    <section class="search-card">
+      <div class="tabs" role="tablist" aria-label="Court tabs">
+        <button class="tab" type="button" role="tab" data-tab="integrated" aria-selected="true">統合検索</button>
+        <button class="tab" type="button" role="tab" data-tab="supreme" aria-selected="false">最高裁判所</button>
+        <button class="tab" type="button" role="tab" data-tab="high" aria-selected="false">高等裁判所</button>
+        <button class="tab" type="button" role="tab" data-tab="lower" aria-selected="false">下級裁(速報)</button>
+        <button class="tab" type="button" role="tab" data-tab="administrative" aria-selected="false">行政事件</button>
+        <button class="tab" type="button" role="tab" data-tab="labor" aria-selected="false">労働事件</button>
+        <button class="tab" type="button" role="tab" data-tab="ip" aria-selected="false">知的財産</button>
+      </div>
+
+      <form id="searchForm" class="advanced" aria-label="search form">
+        <div class="group" aria-label="full text search">
+          <div class="group-header">
+            <h2 class="group-title">全文検索</h2>
+            <button id="toggleQuery2" class="toggle-link" type="button" aria-expanded="false" aria-controls="query2Row">+ 追加キーワード</button>
+          </div>
+          <div class="field">
+            <label for="query1">キーワード (スペース区切り)</label>
+            <input id="query1" name="query1" class="search-input" type="text" placeholder="例: 著作権 損害賠償 東京" autocomplete="off" required />
+          </div>
+          <div id="query2Row" class="field" style="display:none;">
+            <label for="query2">絞り込みキーワード (追加入力)</label>
+            <input id="query2" name="query2" type="text" placeholder="例: 不法行為" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="group" aria-label="judgment date">
+          <div class="group-header">
+            <h2 class="group-title">裁判年月日</h2>
+            <div class="small-note">期日指定 / 期間指定を選択</div>
+          </div>
+          <div class="radio-row">
+            <label class="radio"><input type="radio" name="judgeDateMode" value="1" checked /> 期日指定</label>
+            <label class="radio"><input type="radio" name="judgeDateMode" value="2" /> 期間指定</label>
+          </div>
+
+          <div class="row-4" aria-label="date from">
+            <div class="field">
+              <label for="judgeGengoFrom">元号 (FROM)</label>
+              <select id="judgeGengoFrom" name="judgeGengoFrom">
+                <option value="">選択</option>
+                <option value="令和">令和</option>
+                <option value="平成">平成</option>
+                <option value="昭和">昭和</option>
+                <option value="大正">大正</option>
+                <option value="明治">明治</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="judgeYearFrom">年 (FROM)</label>
+              <select id="judgeYearFrom" name="judgeYearFrom"></select>
+            </div>
+            <div class="field">
+              <label for="judgeMonthFrom">月 (FROM)</label>
+              <select id="judgeMonthFrom" name="judgeMonthFrom"></select>
+            </div>
+            <div class="field">
+              <label for="judgeDayFrom">日 (FROM)</label>
+              <select id="judgeDayFrom" name="judgeDayFrom"></select>
+            </div>
+          </div>
+
+          <div class="row-4" aria-label="date to" id="dateToRow">
+            <div class="field">
+              <label for="judgeGengoTo">元号 (TO)</label>
+              <select id="judgeGengoTo" name="judgeGengoTo">
+                <option value="">選択</option>
+                <option value="令和">令和</option>
+                <option value="平成">平成</option>
+                <option value="昭和">昭和</option>
+                <option value="大正">大正</option>
+                <option value="明治">明治</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="judgeYearTo">年 (TO)</label>
+              <select id="judgeYearTo" name="judgeYearTo"></select>
+            </div>
+            <div class="field">
+              <label for="judgeMonthTo">月 (TO)</label>
+              <select id="judgeMonthTo" name="judgeMonthTo"></select>
+            </div>
+            <div class="field">
+              <label for="judgeDayTo">日 (TO)</label>
+              <select id="judgeDayTo" name="judgeDayTo"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="group" aria-label="case number">
+          <div class="group-header">
+            <h2 class="group-title">事件番号</h2>
+            <div class="small-note">元号 / 年 / 符号 / 番号</div>
+          </div>
+          <div class="row-4">
+            <div class="field">
+              <label for="jikenGengo">元号</label>
+              <select id="jikenGengo" name="jikenGengo">
+                <option value="">選択</option>
+                <option value="令和">令和</option>
+                <option value="平成">平成</option>
+                <option value="昭和">昭和</option>
+                <option value="大正">大正</option>
+                <option value="明治">明治</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="jikenYear">年</label>
+              <input id="jikenYear" name="jikenYear" type="text" inputmode="numeric" placeholder="例: 6" />
+            </div>
+            <div class="field">
+              <label for="jikenCode">符号</label>
+              <input id="jikenCode" name="jikenCode" type="text" placeholder="例: 行ヒ / ワ" />
+            </div>
+            <div class="field">
+              <label for="jikenNumber">番号</label>
+              <input id="jikenNumber" name="jikenNumber" type="text" inputmode="numeric" placeholder="例: 362" />
+            </div>
+          </div>
+        </div>
+
+        <div class="group" aria-label="court name">
+          <div class="group-header">
+            <h2 class="group-title">裁判所名</h2>
+            <div class="small-note">審級 / 管轄 / 裁判所 / 支部</div>
+          </div>
+          <div class="row-4">
+            <div class="field">
+              <label for="courtType">審級</label>
+              <select id="courtType" name="courtType">
+                <option value="">選択</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="courtSection">管轄</label>
+              <select id="courtSection" name="courtSection">
+                <option value="">選択</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="courtName">裁判所</label>
+              <input id="courtName" name="courtName" list="courtNameList" type="text" placeholder="例: 東京地方裁判所" />
+              <datalist id="courtNameList"></datalist>
+            </div>
+            <div class="field">
+              <label for="branchName">支部</label>
+              <input id="branchName" name="branchName" list="branchNameList" type="text" placeholder="例: 本庁" />
+              <datalist id="branchNameList"></datalist>
+            </div>
+          </div>
+        </div>
+
+        <div class="group" aria-label="sort and paging">
+          <div class="group-header">
+            <h2 class="group-title">表示</h2>
+            <div class="small-note">並び順 / ページ</div>
+          </div>
+          <div class="row-3">
+            <div class="field">
+              <label for="sort">ソート</label>
+              <select id="sort" name="sort">
+                <option value="1">裁判年月日降順</option>
+                <option value="2">裁判年月日昇順</option>
+                <option value="3">裁判所建制順</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="offset">Offset</label>
+              <input id="offset" name="offset" type="text" inputmode="numeric" placeholder="0" value="0" />
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <div class="form-actions">
+                <button id="clearBtn" class="btn-secondary" type="button">Clear</button>
+                <button id="searchBtn" class="search-button" type="submit">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div id="loading" class="loading-overlay">Loading... contacting courts.go.jp</div>
+      <div id="error" class="loading-overlay" style="color:#b91c1c;"></div>
+      <div id="phaseNote" class="small-note">Phase 1 uses realtime proxy fetching (no full local precedent DB).</div>
+    </section>
+
+    <div class="layout">
+      <section id="results" class="results-container">
+        <div class="card" style="padding:1.25rem 1.5rem;">
+          <div style="display:flex; justify-content:space-between; gap:1rem; align-items:center;">
+            <div>
+              <div style="font-weight:700; color:var(--brand);">Search results</div>
+              <div id="resultCount" class="mono"></div>
+            </div>
+            <div class="mono" id="backendHint"></div>
+          </div>
+        </div>
+        <div id="resultList" class="result-row"></div>
+      </section>
+
+      <section id="detail" class="detail-container">
+        <div class="detail-grid">
+          <div class="card">
+            <h3>判例内容</h3>
+            <div id="detailMeta" class="mono"></div>
+            <div style="margin-top:0.9rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
+              <a id="detailLink" class="action-btn" href="#" target="_blank" rel="noopener noreferrer">Open detail</a>
+              <a id="pdfLink" class="action-btn" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">Open PDF</a>
+            </div>
+            <div id="detailText" class="precedent-text" style="margin-top:1rem;"></div>
+          </div>
+
+          <div class="card">
+            <h3>GenAI</h3>
+            <div class="small-note" style="margin-bottom:0.9rem;">选择一个 AI 按钮生成结构化摘要。未配置模型时后端会使用规则摘要作为降级。</div>
+            <div class="button-grid">
+              <button class="ai-btn bg-summary" data-mode="summary_zh">Laexis Summary</button>
+              <button class="ai-btn bg-chatgpt" data-mode="summary_zh">ChatGPT</button>
+              <button class="ai-btn bg-gemini" data-mode="summary_zh">Gemini</button>
+              <button class="ai-btn bg-claude" data-mode="summary_zh">Claude</button>
+              <button class="ai-btn bg-deepseek" data-mode="summary_zh">DeepSeek</button>
+              <button class="ai-btn bg-doubao" data-mode="summary_zh">Doubao</button>
+            </div>
+            <div id="aiLoading" class="loading-overlay" style="margin-top:0.8rem;">Generating summary...</div>
+            <div id="aiError" class="small-note" style="margin-top:0.8rem; color:#b91c1c;"></div>
+            <div id="aiResult" style="margin-top:1rem; display:none;">
+              <div class="card" style="padding:1.1rem; border-radius:18px;">
+                <div style="font-weight:700; color:var(--brand);">判决时间</div>
+                <div id="sumDate" class="precedent-text"></div>
+              </div>
+              <div class="card" style="padding:1.1rem; border-radius:18px; margin-top:0.8rem;">
+                <div style="font-weight:700; color:var(--brand);">案件事实</div>
+                <div id="sumFacts" class="precedent-text"></div>
+              </div>
+              <div class="card" style="padding:1.1rem; border-radius:18px; margin-top:0.8rem;">
+                <div style="font-weight:700; color:var(--brand);">法官分析</div>
+                <div id="sumReason" class="precedent-text"></div>
+              </div>
+              <div class="card" style="padding:1.1rem; border-radius:18px; margin-top:0.8rem;">
+                <div style="font-weight:700; color:var(--brand);">最终判决</div>
+                <div id="sumHolding" class="precedent-text"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script src="./precedent.js"></script>
+</body>
+</html>
