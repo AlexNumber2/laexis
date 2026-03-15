@@ -51,6 +51,58 @@ section + section{
     margin-top:35px;
 }
 
+.share-block {
+    margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.share-label {
+    margin: 0 0 15px;
+    color: #9aa6b5;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.share-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.share-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    padding: 12px 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.share-button:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.share-feedback {
+    margin-top: 15px;
+    color: #9aa6b5;
+    font-size: 14px;
+    min-height: 20px;
+}
+
 </style>
 
 </head>
@@ -164,9 +216,57 @@ section + section{
 
 </section>
 
+<div class="share-block">
+    <p class="share-label">Share this article</p>
+    <div class="share-links">
+        <a class="share-button" href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.laexis.com/Insights/Article/article2_J-APPI" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a class="share-button" href="https://social-plugins.line.me/lineit/share?url=https://www.laexis.com/Insights/Article/article2_J-APPI" target="_blank" rel="noopener noreferrer">LINE</a>
+        <button class="share-button" type="button" id="copy-link-button" data-share-url="https://www.laexis.com/Insights/Article/article2_J-APPI">Copy Link</button>
+        <a class="share-button" href="mailto:?subject=Four%20Exceptions%20Permitting%20Cross-Border%20Transfers%20of%20Personal%20Data%20from%20Japan&body=I%20thought%20you%20might%20find%20this%20article%20useful:%20https://www.laexis.com/Insights/Article/article2_J-APPI">Email</a>
+    </div>
+    <p class="share-feedback" id="share-feedback" aria-live="polite"></p>
+</div>
+
 </article>
 
 </div>
 
 </body>
+<script>
+const copyButton = document.getElementById("copy-link-button");
+const feedback = document.getElementById("share-feedback");
+
+if (copyButton && feedback) {
+    copyButton.addEventListener("click", async () => {
+        const shareUrl = copyButton.getAttribute("data-share-url");
+
+        if (!shareUrl) {
+            feedback.textContent = "Link unavailable.";
+            return;
+        }
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(shareUrl);
+            } else {
+                const tempInput = document.createElement("input");
+                tempInput.value = shareUrl;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+            }
+
+            feedback.textContent = "Link copied. You can paste it into WeChat, LINE, or email.";
+            
+            // Clear feedback after 3 seconds
+            setTimeout(() => {
+                feedback.textContent = "";
+            }, 3000);
+        } catch (error) {
+            feedback.textContent = "Copy failed. Please copy the URL from your browser address bar.";
+        }
+    });
+}
+</script>
 </html>
