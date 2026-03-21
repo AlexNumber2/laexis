@@ -414,9 +414,28 @@
       color: #333;
     }
 
+    @media (max-width: 1024px) {
+      .candidate-list { grid-template-columns: repeat(2, 1fr); }
+    }
+
     @media (max-width: 720px) {
       .search-group { flex-direction: column; }
-      .external-link-badge { position: static; margin-bottom: 1rem; }
+      .external-link-badge { 
+        position: static; 
+        margin-bottom: 1rem; 
+        display: inline-flex;
+        width: 100%;
+        justify-content: center;
+      }
+      .candidate-list { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 2.2rem; }
+      .p-num {
+        position: static;
+        display: inline-block;
+        margin-right: 0.5rem;
+      }
+      .item-row { margin-left: 1rem; }
+      .subitem-row { margin-left: 2rem; }
     }
   </style>
 </head>
