@@ -120,78 +120,38 @@ h1 {
   font-size: 1.4rem;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+.firm-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.98rem;
 }
 
-.result-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.95rem;
-  padding: 1.2rem;
-  background: var(--surface-strong);
-  border: 1px solid var(--line);
-  border-radius: 20px;
+.firm-table th,
+.firm-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  line-height: 1.6;
 }
 
-.firm {
-  color: var(--brand);
-  font-size: 1.05rem;
+.firm-table th {
+  font-weight: 700;
+  color: var(--text);
+  border-bottom: 2px solid var(--line);
+}
+
+.firm-table td:nth-child(2) {
   font-weight: 700;
 }
 
-.card-title {
-  margin: 0;
-  font-size: 1.15rem;
-  line-height: 1.5;
+.firm-table td a {
+  color: #1a73e8;
+  text-decoration: underline;
 }
 
-.card-summary {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.8;
-}
-
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  display: inline-flex;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  background: var(--brand-soft);
-  color: var(--brand);
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.card-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  padding: 0.85rem 1.1rem;
-  border-radius: 999px;
-  background: var(--brand);
-  color: #fff;
+.firm-table td a:hover {
   text-decoration: none;
-  font-weight: 700;
-  margin-top: auto;
-}
-
-.card-link:hover {
-  background: #194165;
-}
-
-@media (max-width: 960px) {
-  .cards {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 720px) {
@@ -223,71 +183,68 @@ h1 {
       <span class="eyebrow">Legal Information Navigator</span>
       <h1>最新法律资讯网站信息汇总</h1>
       <p class="lead">
-        这里整理了四家主要日本律所的官网链接，方便您直接进入官网继续检索和浏览。
+        这里整理了主要日本律所的官网链接，方便您直接进入官网继续检索和浏览。
       </p>
     </section>
 
     <section class="results-card">
       <div class="results-head">
-        <h2>Official Entry Points</h2>
+        <h2>◆検索ボックスありのHP</h2>
       </div>
 
-      <div class="cards">
-        <article class="result-card">
-          <div class="firm">Anderson Mori &amp; Tomotsune</div>
-          <p class="card-title">AMT Insights</p>
-          <p class="card-summary">
-            Official insights and featured legal updates from Anderson Mori &amp; Tomotsune.
-          </p>
-          <div class="card-tags">
-            <span class="tag">Official</span>
-            <span class="tag">Insights</span>
-            <span class="tag">Featured</span>
-          </div>
-          <a class="card-link" href="https://www.amt-law.com/insights/search/?insightsCategories[]=featured_insights" target="_blank" rel="noopener noreferrer">Open AMT</a>
-        </article>
+      <div class="table-container" style="overflow-x: auto; margin-bottom: 2.5rem;">
+        <table class="firm-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">No.</th>
+              <th>Law Firm</th>
+              <th>Page (with search / filter / query capability)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Nishimura &amp; Asahi</td><td><a href="https://www.nishimura.com/ja/knowledge/newsletters" target="_blank" rel="noopener noreferrer">https://www.nishimura.com/ja/knowledge/newsletters</a></td></tr>
+            <tr><td>2</td><td>Mori Hamada &amp; Matsumoto</td><td><a href="https://www.morihamada.com/ja/insights/newsletters" target="_blank" rel="noopener noreferrer">https://www.morihamada.com/ja/insights/newsletters</a></td></tr>
+            <tr><td>3</td><td>Nagashima Ohno &amp; Tsunematsu</td><td><a href="https://www.nagashima.com/newsletters/" target="_blank" rel="noopener noreferrer">https://www.nagashima.com/newsletters/</a></td></tr>
+            <tr><td>4</td><td>Atsumi &amp; Sakai</td><td><a href="https://www.aplawjapan.com/search" target="_blank" rel="noopener noreferrer">https://www.aplawjapan.com/search</a></td></tr>
+            <tr><td>7</td><td>Anderson Mori &amp; Tomotsune</td><td><a href="https://www.amt-law.com/search/" target="_blank" rel="noopener noreferrer">https://www.amt-law.com/search/</a></td></tr>
+            <tr><td>8</td><td>City-Yuwa Partners</td><td><a href="https://www.city-yuwa.com/publications/?cp=newsletters" target="_blank" rel="noopener noreferrer">https://www.city-yuwa.com/publications/?cp=newsletters</a></td></tr>
+            <tr><td>10</td><td>Hayabusa Asuka Law Offices</td><td><a href="https://www.halaw.jp/publications/newsletter/" target="_blank" rel="noopener noreferrer">https://www.halaw.jp/publications/newsletter/</a></td></tr>
+            <tr><td>11</td><td>Kitahama Partners</td><td><a href="https://www.kitahama.or.jp/publications/" target="_blank" rel="noopener noreferrer">https://www.kitahama.or.jp/publications/</a></td></tr>
+            <tr><td>13</td><td>Miura &amp; Partners</td><td><a href="https://www.miura-partners.com/topics_category/major_news/" target="_blank" rel="noopener noreferrer">https://www.miura-partners.com/topics_category/major_news/</a></td></tr>
+            <tr><td>18</td><td>Ushijima &amp; Partners</td><td><a href="https://www.ushijima-law.gr.jp/client-alert_seminar/client-alert/" target="_blank" rel="noopener noreferrer">https://www.ushijima-law.gr.jp/client-alert_seminar/client-alert/</a></td></tr>
+            <tr><td>24</td><td>Momo-o, Matsuo &amp; Namba</td><td><a href="https://www.mmn-law.gr.jp/news/index.html" target="_blank" rel="noopener noreferrer">https://www.mmn-law.gr.jp/news/index.html</a></td></tr>
+            <tr><td>33</td><td>One Asia Lawyers</td><td><a href="https://oneasia.legal/category/letter" target="_blank" rel="noopener noreferrer">https://oneasia.legal/category/letter</a></td></tr>
+            <tr><td>42</td><td>Authense Law Offices</td><td><a href="https://www.authense.jp/news_release/" target="_blank" rel="noopener noreferrer">https://www.authense.jp/news_release/</a></td></tr>
+            <tr><td>44</td><td>Spring Law (Spring Partners)</td><td><a href="https://spring-partners.com/topics/" target="_blank" rel="noopener noreferrer">https://spring-partners.com/topics/</a></td></tr>
+          </tbody>
+        </table>
+      </div>
 
-        <article class="result-card">
-          <div class="firm">Nishimura &amp; Asahi</div>
-          <p class="card-title">Nishimura Knowledge</p>
-          <p class="card-summary">
-            Official legal knowledge hub from Nishimura &amp; Asahi.
-          </p>
-          <div class="card-tags">
-            <span class="tag">Official</span>
-            <span class="tag">Knowledge</span>
-            <span class="tag">Research</span>
-          </div>
-          <a class="card-link" href="https://www.nishimura.com/ja/knowledge" target="_blank" rel="noopener noreferrer">Open Nishimura</a>
-        </article>
+      <div class="results-head" style="margin-top: 2rem;">
+        <h2>◆検索ボックスなしのHP</h2>
+      </div>
 
-        <article class="result-card">
-          <div class="firm">Nagashima Ohno &amp; Tsunematsu</div>
-          <p class="card-title">NO&amp;T Newsletters</p>
-          <p class="card-summary">
-            Official newsletters and legal update categories from Nagashima Ohno &amp; Tsunematsu.
-          </p>
-          <div class="card-tags">
-            <span class="tag">Official</span>
-            <span class="tag">Newsletters</span>
-            <span class="tag">Topics</span>
-          </div>
-          <a class="card-link" href="https://www.nagashima.com/newsletters/" target="_blank" rel="noopener noreferrer">Open NO&amp;T</a>
-        </article>
-
-        <article class="result-card">
-          <div class="firm">TMI Associates</div>
-          <p class="card-title">TMI Eyes</p>
-          <p class="card-summary">
-            Official legal articles and topic tags from TMI Associates.
-          </p>
-          <div class="card-tags">
-            <span class="tag">Official</span>
-            <span class="tag">Articles</span>
-            <span class="tag">Topics</span>
-          </div>
-          <a class="card-link" href="https://www.tmi.gr.jp/eyes/tags.html" target="_blank" rel="noopener noreferrer">Open TMI</a>
-        </article>
+      <div class="table-container" style="overflow-x: auto;">
+        <table class="firm-table">
+          <tbody>
+            <tr><td style="width: 50px;">9</td><td>So &amp; Sato Law Offices (暗号資産・資金運用等)</td><td><a href="https://innovationlaw.jp/articles/" target="_blank" rel="noopener noreferrer">https://innovationlaw.jp/articles/</a></td></tr>
+            <tr><td>6</td><td>TMI Associates</td><td><a href="https://www.tmi.gr.jp/english/publications" target="_blank" rel="noopener noreferrer">https://www.tmi.gr.jp/english/publications</a></td></tr>
+            <tr><td>5</td><td>Oh-Ebashi LPC &amp; Partners</td><td><a href="https://www.ohebashi.com/jp/news.php" target="_blank" rel="noopener noreferrer">https://www.ohebashi.com/jp/news.php</a></td></tr>
+            <tr><td>12</td><td>ZeLo Law Office</td><td><a href="https://zelojapan.com/en/insights/" target="_blank" rel="noopener noreferrer">https://zelojapan.com/en/insights/</a></td></tr>
+            <tr><td>14</td><td>GVA Law Office</td><td><a href="https://gvalaw.jp/category/domestic/blog/" target="_blank" rel="noopener noreferrer">https://gvalaw.jp/category/domestic/blog/</a></td></tr>
+            <tr><td>15</td><td>信国際法律事務所</td><td><a href="https://silo.co.jp/seminars" target="_blank" rel="noopener noreferrer">https://silo.co.jp/seminars</a></td></tr>
+            <tr><td>19</td><td>Hibiya-Nakata</td><td><a href="https://hibiya-nakata.com/newsletter/" target="_blank" rel="noopener noreferrer">https://hibiya-nakata.com/newsletter/</a></td></tr>
+            <tr><td>20</td><td>Abe, Ikubo &amp; Katayama</td><td><a href="https://www.aiklaw.co.jp/semi_pub/publication/" target="_blank" rel="noopener noreferrer">https://www.aiklaw.co.jp/semi_pub/publication/</a></td></tr>
+            <tr><td>21</td><td>Yodoyabashi &amp; Yamagami LPC</td><td><a href="https://www.yglpc.com/topics_list/" target="_blank" rel="noopener noreferrer">https://www.yglpc.com/topics_list/</a></td></tr>
+            <tr><td>22</td><td>Kojima Law Offices</td><td><a href="https://www.kojimalaw.jp/newsletters/" target="_blank" rel="noopener noreferrer">https://www.kojimalaw.jp/newsletters/</a></td></tr>
+            <tr><td>26</td><td>Hikari Sogoh Law Offices</td><td><a href="https://hikari-law.com/j/areas/1712" target="_blank" rel="noopener noreferrer">https://hikari-law.com/j/areas/1712</a></td></tr>
+            <tr><td>27</td><td>K&amp;L Gates Tokyo Office</td><td><a href="https://www.klgates.com/ja/news-and-events" target="_blank" rel="noopener noreferrer">https://www.klgates.com/ja/news-and-events</a></td></tr>
+            <tr><td>35</td><td>BLJ Law Offices</td><td><a href="https://www.bizlawjapan.com/world_legal/" target="_blank" rel="noopener noreferrer">https://www.bizlawjapan.com/world_legal/</a></td></tr>
+            <tr><td>37</td><td>Tokyo International Law Office</td><td><a href="https://www.tkilaw.com/insight" target="_blank" rel="noopener noreferrer">https://www.tkilaw.com/insight</a></td></tr>
+            <tr><td>41</td><td>STORIA Law Office</td><td><a href="https://storialaw.jp/blog/category/%e6%b3%95%e5%be%8b%e3%83%bb%e3%83%a5%e3%83%bc%e3%82%b9" target="_blank" rel="noopener noreferrer" style="word-break: break-all;">https://storialaw.jp/blog/category/%e6%b3%95%e5%be%8b%e3%83%bb%e3%83%a5%e3%83%bc%e3%82%b9</a></td></tr>
+            <tr><td>51</td><td>Sakura Kyodo Law Offices</td><td><a href="https://www.sakuralaw.gr.jp/publication/tractate.htm" target="_blank" rel="noopener noreferrer">https://www.sakuralaw.gr.jp/publication/tractate.htm</a></td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
   </div>

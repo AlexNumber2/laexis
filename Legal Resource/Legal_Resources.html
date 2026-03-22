@@ -1,169 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Legal Resources | Laexis Advisory</title>
-<style>
-:root {
-  --bg: #f3efe7;
-  --surface: rgba(255, 255, 255, 0.94);
-  --text: #1f2a37;
-  --muted: #5f6875;
-  --brand: #12314f;
-  --accent: #b88746;
-  --line: rgba(18, 49, 79, 0.12);
-  --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
-  --radius: 28px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Resources | Laexis Advisory</title>
+  <style>
+    :root {
+      --bg: #f3efe7;
+      --surface: rgba(255, 255, 255, 0.94);
+      --text: #1f2a37;
+      --muted: #5f6875;
+      --brand: #12314f;
+      --accent: #b88746;
+      --line: rgba(18, 49, 79, 0.12);
+      --shadow: 0 24px 60px rgba(18, 49, 79, 0.12);
+      --radius: 28px;
+    }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  color: var(--text);
-  background:
-    radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
-    linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(184, 135, 70, 0.12), transparent 25%),
+        linear-gradient(180deg, #f8f4ed 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.page-shell {
-  width: min(1140px, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 28px 0 56px;
-}
+    .page-shell {
+      width: min(1140px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
 
-.brand {
-  color: var(--brand);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-}
+    .brand {
+      color: var(--brand);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
 
-.brand a:hover {
-  text-decoration: underline;
-}
+    .brand a:hover {
+      text-decoration: underline;
+    }
 
-.back-link {
-  color: var(--muted);
-  font-size: 0.95rem;
-  transition: color 0.2s;
-}
+    .back-link {
+      color: var(--muted);
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
 
-.back-link:hover {
-  color: var(--brand);
-}
+    .back-link:hover {
+      color: var(--brand);
+    }
 
-.hero-card {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: clamp(2rem, 4vw, 4rem);
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-}
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: clamp(2rem, 4vw, 4rem);
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-.eyebrow {
-  display: inline-block;
-  margin-bottom: 1rem;
-  padding: 0.45rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(18, 49, 79, 0.08);
-  color: var(--brand);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 1rem;
+      padding: 0.45rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(18, 49, 79, 0.08);
+      color: var(--brand);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
 
-h1 {
-  margin: 0 0 1rem;
-  color: var(--brand);
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.1;
-}
+    h1 {
+      margin: 0 0 1rem;
+      color: var(--brand);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+    }
 
-.intro {
-  margin: 0 auto 3rem;
-  color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1.6;
-  max-width: 36rem;
-}
+    .intro {
+      margin: 0 auto 3rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 36rem;
+    }
 
-.actions {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  max-width: 900px;
-  margin: 0 auto;
-}
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-.action-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem 1.5rem;
-  border-radius: 20px;
-  background: #ffffff;
-  border: 2px solid var(--line);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.5rem;
+      border-radius: 20px;
+      background: #ffffff;
+      border: 2px solid var(--line);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
 
-.action-btn:hover {
-  border-color: var(--brand);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(18, 49, 79, 0.08);
-}
+    .action-btn:hover {
+      border-color: var(--brand);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(18, 49, 79, 0.08);
+    }
 
-.action-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
+    .action-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
 
-.action-title {
-  color: var(--brand);
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-}
+    .action-title {
+      color: var(--brand);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
 
-.action-desc {
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
+    .action-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
 
-@media (max-width: 720px) {
-  .page-shell {
-    padding: 18px 0 32px;
-  }
-}
-</style>
+    @media (max-width: 720px) {
+      .page-shell {
+        padding: 18px 0 32px;
+      }
+    }
+
+    /* --- Search Section Styles --- */
+    .search-section {
+      max-width: 900px;
+      margin: 4rem auto 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(1.5rem, 3vw, 3rem);
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .search-section h2 {
+      color: var(--brand);
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .search-bar input:focus {
+      border-color: var(--brand);
+    }
+
+    .search-bar button {
+      padding: 1rem 2rem;
+      background: var(--brand);
+      color: white;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .search-bar button:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* --- Table Styles --- */
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 600px;
+    }
+
+    .results-table th, 
+    .results-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .results-table th {
+      background: rgba(18, 49, 79, 0.04);
+      color: var(--brand);
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .results-table td {
+      font-size: 0.95rem;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .results-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .firm-badge {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      background: rgba(184, 135, 70, 0.15);
+      color: #8c6430;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .result-link {
+      display: inline-block;
+      color: var(--brand);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .result-link:hover {
+      background: var(--brand);
+      color: white;
+    }
+
+    .loading {
+      color: var(--brand);
+      font-weight: 600;
+      text-align: center;
+      padding: 2rem;
+    }
+  </style>
 </head>
+
 <body>
   <div class="page-shell">
     <div class="topbar">
@@ -190,24 +323,121 @@ h1 {
         <a href="JP_LawResearch/index.html" class="action-btn">
           <div class="action-icon">📚</div>
           <div class="action-title">JP Law Research Tool</div>
-          <div class="action-desc">Access our interactive tool to instantly search and translate Japanese legal clauses.</div>
+          <div class="action-desc">Access our interactive tool to instantly search and translate Japanese legal clauses.
+          </div>
         </a>
 
         <!-- Button 3: To JP Precedent Research -->
         <a href="JP_PrecedentResearch/index1.html" class="action-btn">
           <div class="action-icon">⚖️</div>
           <div class="action-title">JP Precedent Research</div>
-          <div class="action-desc">Search Japanese court precedents and judgments from the official Hanrei database.</div>
+          <div class="action-desc">Search Japanese court precedents and judgments from the official Hanrei database.
+          </div>
         </a>
 
         <!-- Button 4: To Kanpo -->
         <a href="https://www.kanpo.go.jp/index.html#todayBox" class="action-btn" target="_blank">
           <div class="action-icon">📰</div>
           <div class="action-title">官報 (Official Gazette)</div>
-          <div class="action-desc">Access the Japanese Official Gazette for legal notices and government announcements.</div>
+          <div class="action-desc">Access the Japanese Official Gazette for legal notices and government announcements.
+          </div>
         </a>
       </div>
     </div>
+
+    <!-- Law Firm Search Section -->
+    <div class="search-section">
+      <h2>Multi-Firm Legal Search</h2>
+      <p class="intro" style="margin-bottom: 2rem; font-size: 0.95rem; text-align: left;">
+        Search for legal newsletters and insights across 14 major Japanese law firms simultaneously.
+      </p>
+      
+      <div class="search-bar">
+        <input type="text" id="firmSearchInput" placeholder="Enter keywords in Japanese (e.g., 個人情報保護法)...">
+        <button id="firmSearchBtn">🔍 Search</button>
+      </div>
+      
+      <div class="loading" id="searchLoading" style="display: none;">
+        Gathering insights from law firms... Please wait.
+      </div>
+
+      <div class="table-container" id="resultsContainer" style="display: none;">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Law Firm</th>
+              <th style="width: 25%;">Title</th>
+              <th style="width: 45%;">Summary</th>
+              <th style="width: 10%;">Link</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <!-- Results will be injected here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+
+  <script>
+    document.getElementById('firmSearchBtn').addEventListener('click', async () => {
+      const query = document.getElementById('firmSearchInput').value.trim();
+      if (!query) {
+        alert("Please enter a keyword to search.");
+        return;
+      }
+
+      const loadingEl = document.getElementById('searchLoading');
+      const resultsContainer = document.getElementById('resultsContainer');
+      const tbody = document.getElementById('resultsBody');
+
+      // UI Reset
+      loadingEl.style.display = 'block';
+      resultsContainer.style.display = 'none';
+      tbody.innerHTML = '';
+
+      try {
+        // --- REAL API INTEGRATION POINT ---
+        // Fetch data from the Python Backend Crawler running locally
+        const response = await fetch(`http://localhost:8000/api/search?q=${encodeURIComponent(query)}`);
+        
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
+        const jsonResponse = await response.json();
+        const extractedData = jsonResponse.data;
+
+        // Populate Table with the Real Extracted Data
+        if (!extractedData || extractedData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--muted);">No results found for this keyword across the law firms.</td></tr>';
+        } else {
+            extractedData.forEach(item => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td><span class="firm-badge">${item.firm}</span></td>
+                <td style="font-weight: 600; color: var(--brand); font-size: 1.05rem;">${item.title}</td>
+                <td style="color: var(--muted); font-size: 0.9rem;">${item.summary}</td>
+                <td><a href="${item.link}" target="_blank" class="result-link">View Original ↗</a></td>
+              `;
+              tbody.appendChild(tr);
+            });
+        }
+
+        resultsContainer.style.display = 'block';
+      } catch (error) {
+        console.error("Search error:", error);
+        alert("Failed to connect to the scraping engine. Make sure your Python FastAPI server is running on localhost:8000.");
+      } finally {
+        loadingEl.style.display = 'none';
+      }
+    });
+
+    // Enter key support
+    document.getElementById('firmSearchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('firmSearchBtn').click();
+    });
+  </script>
 </body>
+
 </html>
