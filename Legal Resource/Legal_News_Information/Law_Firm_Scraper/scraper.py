@@ -24,8 +24,11 @@ async def scrape_nishimura(query: str, p) -> list:
         await page.fill(search_input_selector, query)
         
         # 3. Press Enter to submit the search form and wait for the page to navigate
-        async with page.expect_navigation(timeout=20000):
-            await page.press(search_input_selector, 'Enter')
+        await page.press(search_input_selector, 'Enter')
+        try:
+            await page.wait_for_load_state("networkidle", timeout=10000)
+        except:
+            pass
         
         # 4. Wait for the result elements to load on the new page
         await page.wait_for_selector('a:has(h3)', timeout=15000)
@@ -103,7 +106,24 @@ async def scrape_cityyuwa(query: str, p) -> list:
     try:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
-        await page.goto(f"https://www.city-yuwa.com/?s={query}", timeout=15000)
+        # WordPress default search
+        response = await page.goto(f"https://www.city-yuwa.com/?s={query}", timeout=15000)
+        await page.wait_for_load_state("networkidle", timeout=10000)
+        
+        items = await page.query_selector_all('article')
+        if not items: items = await page.query_selector_all('.post')
+        
+        for item in items[:3]:
+            link_el = await item.query_selector('a')
+            if not link_el: continue
+            title = await link_el.inner_text()
+            link = await link_el.get_attribute('href')
+            results.append({
+                "title": title.strip()[:60] if title else "No Title",
+                "summary": "Details available on City-Yuwa site",
+                "link": link if link else "https://www.city-yuwa.com/",
+                "firm": "City-Yuwa Partners"
+            })
         await browser.close()
     except Exception as e: print(f"[City-Yuwa] Error: {e}")
     return results
@@ -136,7 +156,21 @@ async def scrape_miura(query: str, p) -> list:
     try:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
-        await page.goto(f"https://www.miura-partners.com/?s={query}", timeout=15000)
+        response = await page.goto(f"https://www.miura-partners.com/?s={query}", timeout=15000)
+        await page.wait_for_load_state("networkidle", timeout=10000)
+        
+        items = await page.query_selector_all('.topics, article')
+        for item in items[:3]:
+            link_el = await item.query_selector('a')
+            if not link_el: continue
+            title = await link_el.inner_text()
+            link = await link_el.get_attribute('href')
+            results.append({
+                "title": title.strip()[:60] if title else "No Title",
+                "summary": "Details available on Miura site",
+                "link": link if link else "https://www.miura-partners.com/",
+                "firm": "Miura & Partners"
+            })
         await browser.close()
     except Exception as e: print(f"[Miura] Error: {e}")
     return results
@@ -169,7 +203,21 @@ async def scrape_oneasia(query: str, p) -> list:
     try:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
-        await page.goto(f"https://oneasia.legal/?s={query}", timeout=15000)
+        response = await page.goto(f"https://oneasia.legal/?s={query}", timeout=15000)
+        await page.wait_for_load_state("networkidle", timeout=10000)
+        
+        items = await page.query_selector_all('article, .post')
+        for item in items[:3]:
+            link_el = await item.query_selector('a')
+            if not link_el: continue
+            title = await link_el.inner_text()
+            link = await link_el.get_attribute('href')
+            results.append({
+                "title": title.strip()[:60] if title else "No Title",
+                "summary": "Details available on One Asia site",
+                "link": link if link else "https://oneasia.legal/",
+                "firm": "One Asia Lawyers"
+            })
         await browser.close()
     except Exception as e: print(f"[One Asia] Error: {e}")
     return results
@@ -197,28 +245,19 @@ async def scrape_spring(query: str, p) -> list:
     return results
 
 # ==========================================================
-# MASTER LAUNCHER: Runs all 14 scrapers simultaneously
+# MASTER LAUNCHER: Runs the 5 requested scrapers simultaneously
 # ==========================================================
 async def scrape_all_firms(query: str) -> list:
-    print(f"Executing Master Scraper across 14 firms for query: '{query}'")
+    print(f"Executing Master Scraper across 5 requested firms for query: '{query}'")
     
     async with async_playwright() as p:
         # We start the tasks concurrently
         tasks = [
             scrape_nishimura(query, p),
             scrape_mhm(query, p),
-            scrape_not(query, p),
-            scrape_atsumi(query, p),
-            scrape_amt(query, p),
             scrape_cityyuwa(query, p),
-            scrape_hayabusa(query, p),
-            scrape_kitahama(query, p),
             scrape_miura(query, p),
-            scrape_ushijima(query, p),
-            scrape_mmn(query, p),
-            scrape_oneasia(query, p),
-            scrape_authense(query, p),
-            scrape_spring(query, p)
+            scrape_oneasia(query, p)
         ]
         
         results_lists = await asyncio.gather(*tasks)
