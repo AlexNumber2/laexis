@@ -170,6 +170,135 @@ h1 {
     border-radius: 20px;
   }
 }
+
+/* --- Search Section Styles --- */
+.search-section {
+  width: 100%;
+  margin: 0 0 2rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  box-shadow: var(--shadow);
+}
+
+.search-section h2 {
+  color: var(--brand);
+  margin-top: 0;
+  font-size: 1.6rem;
+}
+
+.search-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+}
+
+.search-bar input:focus {
+  border-color: var(--brand);
+}
+
+.search-bar button {
+  padding: 0.8rem 1.8rem;
+  background: var(--brand);
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.search-bar button:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.search-table-container {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 600px;
+}
+
+.results-table th, 
+.results-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.results-table th {
+  background: rgba(18, 49, 79, 0.04);
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.results-table td {
+  font-size: 0.95rem;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.results-table tr:last-child td {
+  border-bottom: none;
+}
+
+.firm-badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  background: rgba(184, 135, 70, 0.15);
+  color: #8c6430;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.result-link {
+  display: inline-block;
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.result-link:hover {
+  background: var(--brand);
+  color: white;
+  text-decoration: none;
+}
+
+.loading {
+  color: var(--brand);
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+}
 </style>
 </head>
 <body>
@@ -183,9 +312,42 @@ h1 {
       <span class="eyebrow">Legal Information Navigator</span>
       <h1>最新法律资讯网站信息汇总</h1>
       <p class="lead">
-        这里整理了主要日本律所的官网链接，方便您直接进入官网继续检索和浏览。
+        ここには主な日本の法律事務所の公式サイトへのリンクを掲載しています。直接公式サイトにアクセスして検索や閲覧を続けることができます。
       </p>
     </section>
+
+    <!-- Law Firm Search Section from Resources -->
+    <div class="search-section">
+      <h2>Multi-Firm Legal Search</h2>
+      <p style="color: #666; font-size: 0.95rem; margin-bottom: 1.5rem;">
+        Search for legal newsletters and insights across 5 major Japanese law firms simultaneously.
+      </p>
+      
+      <div class="search-bar">
+        <input type="text" id="firmSearchInput" placeholder="Enter keywords in Japanese (e.g., 個人情報保護法)...">
+        <button id="firmSearchBtn">🔍 Search</button>
+      </div>
+      
+      <div class="loading" id="searchLoading" style="display: none;">
+        Gathering insights from law firms... Please wait.
+      </div>
+
+      <div class="search-table-container" id="resultsContainer" style="display: none;">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Law Firm</th>
+              <th style="width: 25%;">Title</th>
+              <th style="width: 45%;">Summary</th>
+              <th style="width: 10%;">Link</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <!-- Results will be injected here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <section class="results-card">
       <div class="results-head">
@@ -248,5 +410,64 @@ h1 {
       </div>
     </section>
   </div>
+
+  <script>
+    document.getElementById('firmSearchBtn').addEventListener('click', async () => {
+      const query = document.getElementById('firmSearchInput').value.trim();
+      if (!query) {
+        alert("Please enter a keyword to search.");
+        return;
+      }
+
+      const loadingEl = document.getElementById('searchLoading');
+      const resultsContainer = document.getElementById('resultsContainer');
+      const tbody = document.getElementById('resultsBody');
+
+      // UI Reset
+      loadingEl.style.display = 'block';
+      resultsContainer.style.display = 'none';
+      tbody.innerHTML = '';
+
+      try {
+        // Fetch data from the Python Backend Crawler running locally (or remote if changed)
+        const response = await fetch(`http://localhost:8000/api/search?q=${encodeURIComponent(query)}`);
+        
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        
+        const jsonResponse = await response.json();
+        const extractedData = jsonResponse.data;
+
+        // Populate Table with the Real Extracted Data
+        if (!extractedData || extractedData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 2rem; color: var(--muted);">No results found for this keyword across the law firms.</td></tr>';
+        } else {
+            extractedData.forEach(item => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
+                <td><span class="firm-badge">${item.firm}</span></td>
+                <td style="font-weight: 600; color: var(--brand); font-size: 1.05rem;">${item.title}</td>
+                <td style="color: var(--muted); font-size: 0.9rem;">${item.summary}</td>
+                <td><a href="${item.link}" target="_blank" class="result-link">View Original ↗</a></td>
+              `;
+              tbody.appendChild(tr);
+            });
+        }
+
+        resultsContainer.style.display = 'block';
+      } catch (error) {
+        console.error("Search error:", error);
+        alert("Failed to connect to the scraping engine. Make sure your Python server is running.");
+      } finally {
+        loadingEl.style.display = 'none';
+      }
+    });
+
+    // Enter key support
+    document.getElementById('firmSearchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') document.getElementById('firmSearchBtn').click();
+    });
+  </script>
 </body>
 </html>
